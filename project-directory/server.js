@@ -123,8 +123,11 @@ io.on("connection", (socket) => {
       socket.emit("login_response", { success: false });
     }
   });
-  socket.on("displaymap", (data) => {
-    if (connection[socket.id].key === connection[socket.id].key) {
+  socket.on("displaymap", (data, receivedkey) => {
+    console.log("displaymap received")
+    console.log("received data as:", data)
+    console.log("received key as:", receivedkey)
+    if (connection[socket.id].key === receivedkey) {
       socket.emit("test-button", connection[socket.id].key);
       console.log("test-button sent");
     } else {

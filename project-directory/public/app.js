@@ -8,6 +8,8 @@ socket.on("connect_error", (error) => {
 socket.on("connect", () => {
   console.log("Connected to the server");
 });
+let currentkey = undefined
+let temp = undefined
 
 socket.on("disconnect", () => {
   console.error("Disconnected from the server");
@@ -44,7 +46,7 @@ socket.on ("key", (data) => {
 })
 
 function displaymap(){
-  socket.emit("displaymap")
+  socket.emit("displaymap",'1', currentkey)
 }
 
 socket.on("test-button", (data) => {
