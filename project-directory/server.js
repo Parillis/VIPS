@@ -64,7 +64,20 @@ server.listen(PORT, () => {
 
 // Defining the standard variables
 let connected_users = [];
+const users = [
+  { username: "1", password: "1" },
+  { username: "user2", password: "password2" },
+];
+connection = {};
+const letters = "abcdefghijklmnopqrstuvwxyz";
+
 io.on("connection", (socket) => {
+  connection[socket.id] = {
+    username: "",
+    password: "",
+    key: "",
+  };
+
   // Logging the time of connection
   const originalTime = socket.handshake.time;
   const originalDate = new Date(originalTime);
@@ -84,7 +97,47 @@ io.on("connection", (socket) => {
   connected_users.push({ socketId: socket.id });
   console.log(formattedTime, "Connected users:", connected_users.length);
 
-  
+  socket.on("login", ({ username, password }) => {
+    const user = users.find(
+      (user) => user.username === username && user.password === password
+    );
+    if (user) {
+      // Successful login
+      socket.emit("login_response", { success: true });
+      const array = new Uint8Array(32);
+
+      crypto.getRandomValues(array);
+
+      connection[socket.id].key = "";
+      Array.from(array).forEach((byte) => {
+        if (byte % 2 === 0) {
+          connection[socket.id].key += byte % 10;
+        } else {
+          connection[socket.id].key += letters.charAt(byte % letters.length);
+        }
+      });
+      socket.emit("key", connection[socket.id].key);
+      console.log(connection[socket.id].key);
+    } else {
+      // Invalid username or password
+      socket.emit("login_response", { success: false });
+    }
+  });
+  socket.on("displaymap", (data) => {
+    if (connection[socket.id].key === connection[socket.id].key) {
+      socket.emit("test-button", connection[socket.id].key);
+      console.log("test-button sent");
+    } else {
+      socket.emit("action-failed", {});
+    }
+  })
+
+
+
+
+
+
+
   socket.on("disconnect", () => {
     const disconnectedUser = connected_users.find(
       (user) => user.socketId === socket.id
@@ -99,5 +152,6 @@ io.on("connection", (socket) => {
       );
       console.log(formattedTime, "Connected users:", connected_users.length);
     }
+    connection[socket.id].key = "disconnected";
   });
 });
