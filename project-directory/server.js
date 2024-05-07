@@ -52,6 +52,13 @@ try {
 } catch (error) {
   console.log("\x1b[31m%s\x1b[0m", "setting fs failed", error);
 }
+
+import('node-fetch').then(({ default: fetch }) => {
+  // Now you can use fetch here
+}).catch(error => {
+  console.error('Failed to import node-fetch:', error);
+});
+
 // What folders and files should be searched and used
 app.use(express.static("public"));
 app.use(cors(corsOptions));
@@ -123,13 +130,20 @@ io.on("connection", (socket) => {
       socket.emit("login_response", { success: false });
     }
   });
-  socket.on("displaymap", (data, receivedkey) => {
+  socket.on("displaymap", receivedkey => {
     console.log("displaymap received")
-    console.log("received data as:", data)
     console.log("received key as:", receivedkey)
     if (connection[socket.id].key === receivedkey) {
       socket.emit("test-button", connection[socket.id].key);
       console.log("test-button sent");
+      fs.readFile('data.json', 'utf-8', (error,data) => {
+        if (error) {
+          console.error('Failed to read file:', error);
+          return;
+        }
+
+        processData(data);
+      });
     } else {
       socket.emit("action-failed", {});
     }
@@ -140,7 +154,33 @@ io.on("connection", (socket) => {
 
 
 
-
+  function processData(data) {
+    // Convert JSON data to a JavaScript object
+    const jsonData = JSON.parse(data);
+  
+    // Send data to URL
+    fetch('https://coremanager.testvips.nibio.no/models/PSILARTEMP/run', {
+      method: 'POST',
+      body: JSON.stringify(jsonData),
+      headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response => {
+      return response.json();
+    })
+    .then(data => {
+      data.forEach(data => {
+        // Extracting date from validTimeStart
+        const date = new Date(data.validTimeStart);
+        const formattedDate = date.toISOString().split('T')[0]; // Extracting YYYY-MM-DD
+        
+        // Extracting warning status
+        const warningStatus = data.warningStatus;
+        
+        // Emitting an object containing the date and warning status
+        socket.emit('sensor-data', { date: formattedDate, warningStatus: warningStatus });
+      });
+    })
+}
   socket.on("disconnect", () => {
     const disconnectedUser = connected_users.find(
       (user) => user.socketId === socket.id
@@ -158,3 +198,8 @@ io.on("connection", (socket) => {
     connection[socket.id].key = "disconnected";
   });
 });
+
+
+
+
+
