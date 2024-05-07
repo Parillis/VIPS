@@ -54,16 +54,57 @@ socket.on("test-button", (data) => {
   console.log(data, "received");
 });
 
-const sensorDataDiv = document.getElementById("sensorData");
+const sensorDataDiv = document.getElementById("sensorData");document.addEventListener("DOMContentLoaded", function() {
+  const ctx = document.getElementById('myChart').getContext('2d');
+  
+  // Initialize arrays to store date and warning status data
+  const dates = [];
+  const warningStatuses = [];
 
-socket.on("sensor-data", (data) => {
-  console.log("Received sensor data:", data);
-  // Create a <p> element to display each sensor data
-  const sensorDataElement = document.createElement("p");
+  // Define chart variable outside the event listener
+  let chart;
 
-  // Set the text content of the <p> element to the received data
-  sensorDataElement.innerText = `${data.date} ${data.warningStatus}`;
+  chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: dates, // Use dates as labels for y-axis
+      datasets: [{
+        label: 'Warning Status',
+        data: warningStatuses, // Use warning statuses as data for x-axis
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true,
+          suggestedMax: 5, // Start the y-axis at -1
+        }
+      }
+    }
+  });
 
-  // Append the <p> element to the sensorDataDiv
-  sensorDataDiv.appendChild(sensorDataElement);
+  // Listen for 'sensor-data' event from the server
+  socket.on("sensor-data", (data) => {
+    console.log("Received sensor data:", data);
+    
+    // Push date and warning status to their respective arrays
+    dates.push(data.date);
+    warningStatuses.push(data.warningStatus);
+
+    // Update the chart with the new data
+    updateChart();
+  });
+
+  // Function to update the chart with new data
+  function updateChart() {
+    // Update the chart's datasets with the new data
+    chart.data.labels = dates;
+    chart.data.datasets.forEach((dataset) => {
+      dataset.data = warningStatuses;
+    });
+    document.getElementById("myChart").style.display = "block";
+    // Update the chart
+    chart.update();
+  }
 });
