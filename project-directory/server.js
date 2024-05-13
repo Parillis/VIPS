@@ -55,7 +55,6 @@ try {
 
 import("node-fetch")
   .then(({ default: fetch }) => {
-    // Now you can use fetch here
   })
   .catch((error) => {
     console.error("Failed to import node-fetch:", error);
@@ -137,24 +136,57 @@ io.on("connection", (socket) => {
       socket.emit("login_response", { success: false });
     }
   });
-  socket.on("displaymap", (receivedkey) => {
-    console.log("displaymap received");
+  socket.on("requestData", (receivedkey) => {
+    console.log("requestData received");
     console.log("received key as:", receivedkey);
     if (connection[socket.id].key === receivedkey) {
-      socket.emit("test-button", connection[socket.id].key);
+      console.log("requestData key accepted");
+      requestData();
+    } else {
+      console.log("requestData key wrong");
+      socket.emit("action-failed", {});
+    }
+  });
+  socket.on("sendData", (receivedkey) => {
+    console.log("sendData received");
+    console.log("received key as:", receivedkey);
+    if (connection[socket.id].key === receivedkey) {
       console.log("test-button sent");
       fs.readFile("data.json", "utf-8", (error, data) => {
         if (error) {
           console.error("Failed to read file:", error);
           return;
         }
-
         processData(data);
       });
     } else {
       socket.emit("action-failed", {});
     }
   });
+  function requestData() {
+    const bearerToken = "asdfmjrtaADFG348RKVvnsarguja7df0";
+
+    fetch(
+"http://portal.7sense.no:46000/v1/sensorunits/data/latest?serialnumber=21-1065-AA-00001" ,    {
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+          timeout: 30000000, 
+        },
+      }
+    )
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((response) => {
+        console.log("response:", response);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }
 
   function processData(data) {
     // Convert JSON data to a JavaScript object
@@ -186,6 +218,7 @@ io.on("connection", (socket) => {
         });
       });
   }
+
   socket.on("disconnect", () => {
     const disconnectedUser = connected_users.find(
       (user) => user.socketId === socket.id

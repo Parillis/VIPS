@@ -11,6 +11,7 @@
   </head>
   <body>
     <div id="login-container">
+      <h1>Parillis</h1>
       <h2>Login</h2>
       <form id="login-form">
         <div class="form-group">
@@ -26,7 +27,9 @@
     </div>
     <div id="mainpage" style="display: none;">
       <h1>Parrillis Sensor data testing</h1>
-      <button onclick="displaymap()">Send data Request</button>
+      <button onclick="requestData()">Request data from 7Sense</button>
+      <button onclick="sendData()">Send data Request to VIPS</button>
+
       <div id="sensorData"></div>
       <canvas id="myChart" style="display: none;"></canvas>
     </div>

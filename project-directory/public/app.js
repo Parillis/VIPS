@@ -45,14 +45,14 @@ socket.on("key", (data) => {
   currentkey = data;
 });
 
-function displaymap() {
-  socket.emit("displaymap", currentkey);
+function sendData() {
+  socket.emit("sendData", currentkey);
+}
+function requestData() {
+  socket.emit("requestData", currentkey);
+  console.log("Request data sent")
 }
 
-socket.on("test-button", (data) => {
-  document.getElementById("mapdata").innerText = data;
-  console.log(data, "received");
-});
 
 const sensorDataDiv = document.getElementById("sensorData");document.addEventListener("DOMContentLoaded", function() {
   const ctx = document.getElementById('myChart').getContext('2d');
@@ -65,7 +65,7 @@ const sensorDataDiv = document.getElementById("sensorData");document.addEventLis
   let chart;
 
   chart = new Chart(ctx, {
-    type: 'bar',
+    type: 'line',
     data: {
       labels: dates, // Use dates as labels for y-axis
       datasets: [{
