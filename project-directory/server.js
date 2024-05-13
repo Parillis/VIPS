@@ -170,8 +170,9 @@ io.on("connection", (socket) => {
 "http://portal.7sense.no:46000/v1/sensorunits/data/latest?serialnumber=21-1065-AA-00001" ,    {
         headers: {
           Authorization: `Bearer ${bearerToken}`,
-          timeout: 30000000, 
         },
+        timeout: 30000000, 
+        method: "GET",
       }
     )
       .then((response) => {
