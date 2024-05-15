@@ -1,0 +1,48 @@
+{
+  "loginInfo": {
+    "username": "testuser",
+    "password": "testpass"
+  },
+  "modelId": "PSILARTEMP",
+  "configParameters": {
+    "timeZone": "Europe/Oslo",
+    "observations": [
+      {
+        "elementMeasurementTypeId": "TM",
+        "logIntervalId": 2,
+        "timeMeasured": "2024-05-07T22:00:00Z",
+        "value": 9.7
+      },
+      {
+        "elementMeasurementTypeId": "TM",
+        "logIntervalId": 2,
+        "timeMeasured": "2024-05-08T22:00:00Z",
+        "value": 10.9
+      },
+      {
+        "elementMeasurementTypeId": "TM",
+        "logIntervalId": 2,
+        "timeMeasured": "2024-05-09T22:00:00Z",
+        "value": 11.3
+      },
+      {
+        "elementMeasurementTypeId": "TM",
+        "logIntervalId": 2,
+        "timeMeasured": "2024-05-10T22:00:00Z",
+        "value": 8.2
+      },
+      {
+        "elementMeasurementTypeId": "TM",
+        "logIntervalId": 2,
+        "timeMeasured": "2024-05-11T22:00:00Z",
+        "value": 10.7
+      },
+      {
+        "elementMeasurementTypeId": "TM",
+        "logIntervalId": 2,
+        "timeMeasured": "2024-05-12T22:00:00Z",
+        "value": 11.2
+      }
+    ]
+  }
+}

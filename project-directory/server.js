@@ -54,8 +54,7 @@ try {
 }
 
 import("node-fetch")
-  .then(({ default: fetch }) => {
-  })
+  .then(({ default: fetch }) => {})
   .catch((error) => {
     console.error("Failed to import node-fetch:", error);
   });
@@ -157,21 +156,23 @@ io.on("connection", (socket) => {
           console.error("Failed to read file:", error);
           return;
         }
-        processData(data);
+        sendData(data);
       });
     } else {
       socket.emit("action-failed", {});
     }
   });
   function requestData() {
+    console.log('requestData started as ', socket.id);
     const bearerToken = "asdfmjrtaADFG348RKVvnsarguja7df0";
 
     fetch(
-"http://portal.7sense.no:46000/v1/sensorunits/data/latest?serialnumber=21-1065-AA-00001" ,    {
+      "http://portal.7sense.no:46000/v1/sensorunits/data?serialnumber=21-1065-AA-00001&timestart=2024-05-10",
+      {
         headers: {
           Authorization: `Bearer ${bearerToken}`,
         },
-        timeout: 30000000, 
+        timeout: 30000000,
         method: "GET",
       }
     )
@@ -181,25 +182,96 @@ io.on("connection", (socket) => {
         }
         return response.json();
       })
-      .then((response) => {
-        console.log("response:", response);
+      .then((data) => {
+        const result = data.result;
+        const filteredData = result.filter((item) => item.probenumber === 1);
+
+        // Log the filtered data
+        // console.log("Filtered Data:", filteredData);
+        formatData(filteredData);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
   }
+  function formatData(data) {
+    console.log(
+      `Started formatting Data as ${socket.id}`
+    );
+    const loginInfo = {
+      username: "testuser",
+      password: "testpass",
+    };
+    const modelId = "PSILARTEMP";
+  
+    // Extract timestamps and group by date
+    const groupedData = data.reduce((acc, item) => {
+      const date = new Date(item.timestamp).toISOString().split("T")[0];
+      if (!acc[date]) acc[date] = [];
+      acc[date].push(item);
+      return acc;
+    }, {});
+  
+    // Helper function to find the closest hour data
+    function findClosestHourData(dateData, targetHour) {
+      const hours = dateData.map((item) => new Date(item.timestamp).getUTCHours());
+      let closestHour = null;
+      let closestDifference = Infinity;
+  
+      hours.forEach((hour) => {
+        const difference = Math.abs(hour - targetHour);
+        if (difference < closestDifference) {
+          closestDifference = difference;
+          closestHour = hour;
+        }
+      });
+  
+      return dateData.find((item) => new Date(item.timestamp).getUTCHours() === closestHour);
+    }
+  
+    // Filter data to find closest to 22:00 if 22:00 data is not available
+    const observations = Object.values(groupedData).map((dateData) => {
+      const targetHour = 22;
+      let dataItem = dateData.find((item) => new Date(item.timestamp).getUTCHours() === targetHour);
+      if (!dataItem) {
+        dataItem = findClosestHourData(dateData, targetHour);
+      }
+      const isoString = new Date(dataItem.timestamp).toISOString();
+      const timeMeasured = isoString.substring(0, isoString.length - 10) + "00:00Z";
+      return {
+        elementMeasurementTypeId: "TM",
+        logIntervalId: 2,
+        timeMeasured: timeMeasured,
+        value: dataItem.value,
+      };
+    });
+  
+    const formattedData = {
+      loginInfo: loginInfo,
+      modelId: modelId,
+      configParameters: {
+        timeZone: "Europe/Oslo",
+        observations: observations,
+      },
+    };
+  
+    sendData(formattedData);
+  }
+  
 
-  function processData(data) {
-    // Convert JSON data to a JavaScript object
-    const jsonData = JSON.parse(data);
+  function sendData(data) {
 
-    // Send data to URL
+    // console.log(JSON.stringify(data));
+    console.log("Senddata data above");
+    console.log("sendData startet as", socket.id)
+
     fetch("https://coremanager.testvips.nibio.no/models/PSILARTEMP/run", {
       method: "POST",
-      body: JSON.stringify(jsonData),
+      body: JSON.stringify(data),
       headers: { "Content-Type": "application/json" },
     })
       .then((response) => {
+        console.log("RESPONSE HERE", response);
         return response.json();
       })
       .then((data) => {
