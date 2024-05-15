@@ -58,7 +58,7 @@ import("node-fetch")
   .catch((error) => {
     console.error("Failed to import node-fetch:", error);
   });
-const numeric = require('numeric');
+const numeric = require("numeric");
 // What folders and files should be searched and used
 app.use(express.static("public"));
 app.use(cors(corsOptions));
@@ -88,6 +88,11 @@ io.on("connection", (socket) => {
     username: "",
     userId: "",
     key: "",
+    models: {
+      PSILARTEMP: {
+        data: {},
+      },
+    },
   };
 
   // Logging the time of connection
@@ -151,19 +156,19 @@ io.on("connection", (socket) => {
     console.log("received key as:", receivedkey);
     if (connection[socket.id].key === receivedkey) {
       console.log("test-button sent");
-      fs.readFile("data.json", "utf-8", (error, data) => {
-        if (error) {
-          console.error("Failed to read file:", error);
-          return;
-        }
-        sendData(data);
-      });
+      try {
+        sendData(connection[socket.id].models.PSILARTEMP.data)
+      } catch (error) {
+        console.log(error);
+
+      }
+      
     } else {
       socket.emit("action-failed", {});
     }
   });
   function requestData() {
-    console.log('requestData started as ', socket.id);
+    console.log("requestData started as ", socket.id);
     const bearerToken = "asdfmjrtaADFG348RKVvnsarguja7df0";
 
     fetch(
@@ -181,7 +186,6 @@ io.on("connection", (socket) => {
           throw new Error("Network response was not ok");
         }
         return response.json();
-
       })
       .then((data) => {
         const result = data.result;
@@ -193,18 +197,19 @@ io.on("connection", (socket) => {
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
+        socket.emit("RequestDataError",error)
       });
   }
 
-    function formatData(data) {
-      // Write the contents of data to formatdata.json
- 
+  function formatData(data) {
+    // Write the contents of data to formatdata.json
+
     const loginInfo = {
       username: "testuser",
       password: "testpass",
     };
     const modelId = "PSILARTEMP";
-    
+
     // Extract timestamps and group by date
     const groupedData = data.reduce((acc, item) => {
       const date = new Date(item.timestamp).toISOString().split("T")[0];
@@ -215,23 +220,25 @@ io.on("connection", (socket) => {
 
     // Create an array of dates and an array of corresponding temperature values
     const dates = Object.keys(groupedData).sort();
-    const temperatureValues = dates.map(date => {
-      const targetHour = 22;
-      let dataItem = groupedData[date].find(item => new Date(item.timestamp).getUTCHours() === targetHour);
+    const temperatureValues = dates.map((date) => {
+      const targetHour = 16;
+      let dataItem = groupedData[date].find(
+        (item) => new Date(item.timestamp).getUTCHours() === targetHour
+      );
       if (!dataItem) {
         dataItem = findClosestHourData(groupedData[date], targetHour);
       }
       return dataItem ? dataItem.value : null;
     });
-  
+
     // Fill in missing dates and interpolate temperature values
     const allDates = [];
     const allTemperatureValues = [];
-  
+
     const startDate = new Date(dates[0]);
     const endDate = new Date(dates[dates.length - 1]);
     let currentDate = startDate;
-  
+
     while (currentDate <= endDate) {
       const dateString = currentDate.toISOString().split("T")[0];
       allDates.push(dateString);
@@ -243,15 +250,17 @@ io.on("connection", (socket) => {
       }
       currentDate.setDate(currentDate.getDate() + 1);
     }
-  
+
     // Convert dates to numeric representation
-    const dateNums = allDates.map(date => new Date(date).getTime());
-    const nonNullDateNums = dateNums.filter((_, i) => allTemperatureValues[i] !== null);
-    const nonNullTemps = allTemperatureValues.filter(value => value !== null);
-  
+    const dateNums = allDates.map((date) => new Date(date).getTime());
+    const nonNullDateNums = dateNums.filter(
+      (_, i) => allTemperatureValues[i] !== null
+    );
+    const nonNullTemps = allTemperatureValues.filter((value) => value !== null);
+
     // Perform spline interpolation using numeric.js
     const spline = numeric.spline(nonNullDateNums, nonNullTemps);
-  
+
     const interpolatedValues = dateNums.map((dateNum, index) => {
       if (allTemperatureValues[index] !== null) {
         return allTemperatureValues[index];
@@ -259,10 +268,10 @@ io.on("connection", (socket) => {
         return spline.at(dateNum);
       }
     });
-  
+
     // Create observations
     const observations = allDates.map((date, index) => {
-      const timeMeasured = `${date}T00:00:00.000Z`;
+      const timeMeasured = `${date}T16:00:00Z`;
       return {
         elementMeasurementTypeId: "TM",
         logIntervalId: 2,
@@ -270,7 +279,7 @@ io.on("connection", (socket) => {
         value: interpolatedValues[index],
       };
     });
-  
+
     const formattedData = {
       loginInfo: loginInfo,
       modelId: modelId,
@@ -279,23 +288,30 @@ io.on("connection", (socket) => {
         observations: observations,
       },
     };
-  
-    sendData(formattedData);
-    fs.writeFile('formatdata.json', JSON.stringify(formattedData, null, 2), 'utf-8', (err) => {
-      if (err) {
-        console.error("Error writing to formatdata.json:", err);
-      } else {
-        console.log("Data has been written to formatdata.json");
+    connection[socket.id].models.PSILARTEMP.data = formattedData;
+    // sendData(formattedData);
+    fs.writeFile(
+      "formatdata.json",
+      JSON.stringify(formattedData, null, 2),
+      "utf-8",
+      (err) => {
+        if (err) {
+          console.error("Error writing to formatdata.json:", err);
+        } else {
+          console.log("Data has been written to formatdata.json");
+        }
       }
-    });
+    );
   }
-  
+
   // Helper function to find the closest hour data
   function findClosestHourData(dateData, targetHour) {
-    const hours = dateData.map((item) => new Date(item.timestamp).getUTCHours());
+    const hours = dateData.map((item) =>
+      new Date(item.timestamp).getUTCHours()
+    );
     let closestHour = null;
     let closestDifference = Infinity;
-  
+
     hours.forEach((hour) => {
       const difference = Math.abs(hour - targetHour);
       if (difference < closestDifference) {
@@ -303,16 +319,20 @@ io.on("connection", (socket) => {
         closestHour = hour;
       }
     });
-  
-    return dateData.find((item) => new Date(item.timestamp).getUTCHours() === closestHour);
+
+    return dateData.find(
+      (item) => new Date(item.timestamp).getUTCHours() === closestHour
+    );
   }
-  
+
   // Helper function to find the closest hour data
   function findClosestHourData(dateData, targetHour) {
-    const hours = dateData.map((item) => new Date(item.timestamp).getUTCHours());
+    const hours = dateData.map((item) =>
+      new Date(item.timestamp).getUTCHours()
+    );
     let closestHour = null;
     let closestDifference = Infinity;
-  
+
     hours.forEach((hour) => {
       const difference = Math.abs(hour - targetHour);
       if (difference < closestDifference) {
@@ -320,16 +340,17 @@ io.on("connection", (socket) => {
         closestHour = hour;
       }
     });
-  
-    return dateData.find((item) => new Date(item.timestamp).getUTCHours() === closestHour);
+
+    return dateData.find(
+      (item) => new Date(item.timestamp).getUTCHours() === closestHour
+    );
   }
-  
 
   function sendData(data) {
-
-    // console.log(JSON.stringify(data));
+    try {
+      // console.log(JSON.stringify(data));
     console.log("Senddata data above");
-    console.log("sendData startet as", socket.id)
+    console.log("sendData startet as", socket.id);
 
     fetch("https://coremanager.testvips.nibio.no/models/PSILARTEMP/run", {
       method: "POST",
@@ -341,21 +362,30 @@ io.on("connection", (socket) => {
         return response.json();
       })
       .then((data) => {
-        data.forEach((data) => {
-          // Extracting date from validTimeStart
-          const date = new Date(data.validTimeStart);
-          const formattedDate = date.toISOString().split("T")[0]; // Extracting YYYY-MM-DD
-
-          // Extracting warning status
-          const warningStatus = data.warningStatus;
-
-          // Emitting an object containing the date and warning status
-          socket.emit("sensor-data", {
-            date: formattedDate,
-            warningStatus: warningStatus,
+        try{
+          data.forEach((data) => {
+            // Extracting date from validTimeStart
+            const date = new Date(data.validTimeStart);
+            const formattedDate = date.toISOString().split("T")[0]; // Extracting YYYY-MM-DD
+  
+            // Extracting warning status
+            const warningStatus = data.warningStatus;
+  
+            // Emitting an object containing the date and warning status
+            socket.emit("sensor-data", {
+              date: formattedDate,
+              warningStatus: warningStatus,
+            });
           });
-        });
+        }catch (error){
+          socket.emit("SendDataError404")
+          console.log(error);
+        }
       });
+    } catch (error) {
+      console.log(error);
+
+    }
   }
 
   socket.on("disconnect", () => {

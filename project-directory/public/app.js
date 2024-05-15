@@ -87,6 +87,7 @@ const sensorDataDiv = document.getElementById("sensorData");document.addEventLis
   // Listen for 'sensor-data' event from the server
   socket.on("sensor-data", (data) => {
     console.log("Received sensor data:", data);
+    document.getElementById("SendDataStatus").innerText = "Sending data successful, data received"
     
     // Push date and warning status to their respective arrays
     dates.push(data.date);
@@ -108,3 +109,10 @@ const sensorDataDiv = document.getElementById("sensorData");document.addEventLis
     chart.update();
   }
 });
+
+socket.on ("SendDataError404", (data) =>{
+  document.getElementById("SendDataStatus").innerText = "Sending Data error 404: No Saved Data"
+})
+socket.on ("RequestDataError", (data) =>{
+  document.getElementById("RequestDataStatus").innerText = ('Reqesting Data failed:' + JSON.stringify(data))
+})
