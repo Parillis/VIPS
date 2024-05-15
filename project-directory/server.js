@@ -58,7 +58,7 @@ import("node-fetch")
   .catch((error) => {
     console.error("Failed to import node-fetch:", error);
   });
-
+const numeric = require('numeric');
 // What folders and files should be searched and used
 app.use(express.static("public"));
 app.use(cors(corsOptions));
@@ -167,7 +167,7 @@ io.on("connection", (socket) => {
     const bearerToken = "asdfmjrtaADFG348RKVvnsarguja7df0";
 
     fetch(
-      "http://portal.7sense.no:46000/v1/sensorunits/data?serialnumber=21-1065-AA-00001&timestart=2024-05-10",
+      "http://portal.7sense.no:46000/v1/sensorunits/data?serialnumber=21-1065-AA-00001&timestart=2024-01-01",
       {
         headers: {
           Authorization: `Bearer ${bearerToken}`,
@@ -181,6 +181,7 @@ io.on("connection", (socket) => {
           throw new Error("Network response was not ok");
         }
         return response.json();
+
       })
       .then((data) => {
         const result = data.result;
@@ -194,16 +195,16 @@ io.on("connection", (socket) => {
         console.error("Error fetching data:", error);
       });
   }
-  function formatData(data) {
-    console.log(
-      `Started formatting Data as ${socket.id}`
-    );
+
+    function formatData(data) {
+      // Write the contents of data to formatdata.json
+ 
     const loginInfo = {
       username: "testuser",
       password: "testpass",
     };
     const modelId = "PSILARTEMP";
-  
+    
     // Extract timestamps and group by date
     const groupedData = data.reduce((acc, item) => {
       const date = new Date(item.timestamp).toISOString().split("T")[0];
@@ -211,38 +212,62 @@ io.on("connection", (socket) => {
       acc[date].push(item);
       return acc;
     }, {});
+
+    // Create an array of dates and an array of corresponding temperature values
+    const dates = Object.keys(groupedData).sort();
+    const temperatureValues = dates.map(date => {
+      const targetHour = 22;
+      let dataItem = groupedData[date].find(item => new Date(item.timestamp).getUTCHours() === targetHour);
+      if (!dataItem) {
+        dataItem = findClosestHourData(groupedData[date], targetHour);
+      }
+      return dataItem ? dataItem.value : null;
+    });
   
-    // Helper function to find the closest hour data
-    function findClosestHourData(dateData, targetHour) {
-      const hours = dateData.map((item) => new Date(item.timestamp).getUTCHours());
-      let closestHour = null;
-      let closestDifference = Infinity;
+    // Fill in missing dates and interpolate temperature values
+    const allDates = [];
+    const allTemperatureValues = [];
   
-      hours.forEach((hour) => {
-        const difference = Math.abs(hour - targetHour);
-        if (difference < closestDifference) {
-          closestDifference = difference;
-          closestHour = hour;
-        }
-      });
+    const startDate = new Date(dates[0]);
+    const endDate = new Date(dates[dates.length - 1]);
+    let currentDate = startDate;
   
-      return dateData.find((item) => new Date(item.timestamp).getUTCHours() === closestHour);
+    while (currentDate <= endDate) {
+      const dateString = currentDate.toISOString().split("T")[0];
+      allDates.push(dateString);
+      const index = dates.indexOf(dateString);
+      if (index !== -1) {
+        allTemperatureValues.push(temperatureValues[index]);
+      } else {
+        allTemperatureValues.push(null);
+      }
+      currentDate.setDate(currentDate.getDate() + 1);
     }
   
-    // Filter data to find closest to 22:00 if 22:00 data is not available
-    const observations = Object.values(groupedData).map((dateData) => {
-      const targetHour = 22;
-      let dataItem = dateData.find((item) => new Date(item.timestamp).getUTCHours() === targetHour);
-      if (!dataItem) {
-        dataItem = findClosestHourData(dateData, targetHour);
+    // Convert dates to numeric representation
+    const dateNums = allDates.map(date => new Date(date).getTime());
+    const nonNullDateNums = dateNums.filter((_, i) => allTemperatureValues[i] !== null);
+    const nonNullTemps = allTemperatureValues.filter(value => value !== null);
+  
+    // Perform spline interpolation using numeric.js
+    const spline = numeric.spline(nonNullDateNums, nonNullTemps);
+  
+    const interpolatedValues = dateNums.map((dateNum, index) => {
+      if (allTemperatureValues[index] !== null) {
+        return allTemperatureValues[index];
+      } else {
+        return spline.at(dateNum);
       }
-      const isoString = new Date(dataItem.timestamp).toISOString();
-      const timeMeasured = isoString.substring(0, isoString.length - 10) + "00:00Z";
+    });
+  
+    // Create observations
+    const observations = allDates.map((date, index) => {
+      const timeMeasured = `${date}T00:00:00.000Z`;
       return {
         elementMeasurementTypeId: "TM",
         logIntervalId: 2,
         timeMeasured: timeMeasured,
-        value: dataItem.value,
+        value: interpolatedValues[index],
       };
     });
   
@@ -256,6 +281,47 @@ io.on("connection", (socket) => {
     };
   
     sendData(formattedData);
+    fs.writeFile('formatdata.json', JSON.stringify(formattedData, null, 2), 'utf-8', (err) => {
+      if (err) {
+        console.error("Error writing to formatdata.json:", err);
+      } else {
+        console.log("Data has been written to formatdata.json");
+      }
+    });
+  }
+  
+  // Helper function to find the closest hour data
+  function findClosestHourData(dateData, targetHour) {
+    const hours = dateData.map((item) => new Date(item.timestamp).getUTCHours());
+    let closestHour = null;
+    let closestDifference = Infinity;
+  
+    hours.forEach((hour) => {
+      const difference = Math.abs(hour - targetHour);
+      if (difference < closestDifference) {
+        closestDifference = difference;
+        closestHour = hour;
+      }
+    });
+  
+    return dateData.find((item) => new Date(item.timestamp).getUTCHours() === closestHour);
+  }
+  
+  // Helper function to find the closest hour data
+  function findClosestHourData(dateData, targetHour) {
+    const hours = dateData.map((item) => new Date(item.timestamp).getUTCHours());
+    let closestHour = null;
+    let closestDifference = Infinity;
+  
+    hours.forEach((hour) => {
+      const difference = Math.abs(hour - targetHour);
+      if (difference < closestDifference) {
+        closestDifference = difference;
+        closestHour = hour;
+      }
+    });
+  
+    return dateData.find((item) => new Date(item.timestamp).getUTCHours() === closestHour);
   }
   
 
