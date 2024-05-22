@@ -126,8 +126,6 @@ document.addEventListener("DOMContentLoaded", function () {
   // Listen for 'sensor-data' event from the server
   socket.on("sensor-data", (data) => {
     console.log("Received sensor data:", data);
-    document.getElementById("SendDataStatus").innerText =
-      "Sending data successful, data received";
     if (timesSent <= 16) {
       timesSent = timesSent + 1;
       dates.push(data.date);
