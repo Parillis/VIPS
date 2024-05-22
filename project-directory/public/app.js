@@ -36,8 +36,6 @@ socket.on("login_response", function (data) {
     console.log("Successfully logged in");
     document.getElementById("login-container").style.display = "none";
     document.getElementById("mainpage").style.display = "block";
-
-    fetchDataAndRenderChart();
   } else {
     alert("Invalid username or password. Please try again.");
   }
@@ -58,7 +56,7 @@ function requestData() {
 const sensorDataDiv = document.getElementById("sensorData");
 
 document.addEventListener("DOMContentLoaded", function () {
-  const ctx = document.getElementById('myChart').getContext('2d');
+  const ctx = document.getElementById("myChart").getContext("2d");
 
   // Initialize arrays to store date and warning status data
   const dates = [];
@@ -68,32 +66,34 @@ document.addEventListener("DOMContentLoaded", function () {
   let chart;
 
   chart = new Chart(ctx, {
-    type: 'line',
+    type: "line",
     data: {
       labels: dates, // Use dates as labels for x-axis
-      datasets: [{
-        label: 'Warning Status',
-        data: warningStatuses, // Use warning statuses as data for y-axis
-        borderWidth: 2,
-        fill: false,
-        // pointRadius: 0,
-        pointcolor: 'red',
-        segment: {
-          borderColor: ctx => {
-            const index = ctx.p0DataIndex;
-            switch (warningStatuses[index]) {
-              case 2:
-                return 'blue';
-              case 3:
-                return 'yellow';
-              case 4:
-                return 'red';
-              default:
-                return 'gray';
-            }
-          }
-        }
-      }]
+      datasets: [
+        {
+          label: "Warning Status",
+          data: warningStatuses, // Use warning statuses as data for y-axis
+          borderWidth: 2,
+          fill: false,
+          // pointRadius: 0,
+          pointcolor: "red",
+          segment: {
+            borderColor: (ctx) => {
+              const index = ctx.p0DataIndex;
+              switch (warningStatuses[index]) {
+                case 2:
+                  return "blue";
+                case 3:
+                  return "yellow";
+                case 4:
+                  return "red";
+                default:
+                  return "gray";
+              }
+            },
+          },
+        },
+      ],
     },
     options: {
       responsive: true,
@@ -103,38 +103,48 @@ document.addEventListener("DOMContentLoaded", function () {
           suggestedMax: 5, // Start the y-axis at 0
           title: {
             display: true,
-            text: 'Warning Status'
-          }
+            text: "Warning Status",
+          },
         },
         x: {
           title: {
             display: true,
-            text: 'Date'
-          }
-        }
+            text: "Date",
+          },
+        },
       },
       elements: {
         line: {
-          tension: 0
-        }
-      }
-    }
+          tension: 0,
+        },
+      },
+    },
   });
 
   // Listen for 'sensor-data' event from the server
   socket.on("sensor-data", (data) => {
     console.log("Received sensor data:", data);
-    document.getElementById("SendDataStatus").innerText = "Sending data successful, data received";
-    
-    // Push date and warning status to their respective arrays
-    dates.push(data.date);
-    warningStatuses.push(data.warningStatus);
+    document.getElementById("SendDataStatus").innerText =
+      "Sending data successful, data received";
+    if (timesSent <= 16) {
+      timesSent = timesSent + 1;
+      dates.push(data.date);
+      warningStatuses.push(data.warningStatus);
+      updateChart();
+    } else if (timesSent >= 17) {
+      timesSent = 0
+      dates.splice(0, dates.length);
+      warningStatuses.splice(0, warningStatuses.length);
+      updateChart();
+      console.log("TimesSen23123121312312313t: ", timesSent);
+      dates.push(data.date);
+      warningStatuses.push(data.warningStatus);
+      updateChart();
+    }
 
     // Update the chart with the new data
-    updateChart();
   });
 
-  // Function to update the chart with new data
   function updateChart() {
     // Update the chart's datasets with the new data
     chart.data.labels = dates;
@@ -145,19 +155,22 @@ document.addEventListener("DOMContentLoaded", function () {
     chart.update();
   }
 });
-
+timesSent = 0;
 socket.on("SendDataError404", (data) => {
-  document.getElementById("SendDataStatus").innerText = "Sending Data error 404: No Saved Data";
+  document.getElementById("SendDataStatus").innerText =
+    "Sending Data error 404: No Saved Data";
 });
 socket.on("RequestDataError", (data) => {
-  document.getElementById("RequestDataStatus").innerText = ('Reqesting Data failed:' + JSON.stringify(data));
+  document.getElementById("RequestDataStatus").innerText =
+    "Reqesting Data failed:" + JSON.stringify(data);
 });
 socket.on("Processing", (data) => {
   console.log("R");
-  document.getElementById("RequestDataStatus").innerText = ('Processing Data');
+  document.getElementById("RequestDataStatus").innerText = "Processing Data";
 });
 
 socket.on("data-formatted", (data) => {
   console.log("R22");
-  document.getElementById("RequestDataStatus").innerText = ('Data processing complete');
+  document.getElementById("RequestDataStatus").innerText =
+    "Data processing complete";
 });
