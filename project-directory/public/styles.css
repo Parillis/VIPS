@@ -83,10 +83,9 @@ input {
   font-size: 1rem;
   transition: border-color 0.3s;
 }
-
 button {
-  background-color: var(--button-bg-color);
-  color: white;
+  background-color: whitesmoke;
+  color: black;
   padding: 1rem 2rem;
   border: none;
   border-radius: 4px;
@@ -95,6 +94,7 @@ button {
   font-weight: 600;
   transition: background-color 0.3s;
   margin: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 button:hover {
@@ -102,8 +102,28 @@ button:hover {
 }
 
 header {
-  text-align: center;
-  margin-bottom: 2rem;
+  display: flex;
+  align-items: center; /* Vertically center the items */
+  justify-content: center; /* Horizontally center the items */
+  padding: 1rem;
+}
+
+#main-logo {
+  margin-right: 1rem; /* Add some space between the logo and the text */
+  max-height: 100px; /* Adjust the logo size as needed */
+}
+
+.header-text-container {
+  text-align: left; /* Align text to the left within the container */
+}
+
+#header-text {
+  margin: 0;
+}
+
+#model-header {
+  margin: 0;
+  font-size: 1rem; /* Adjust font size as needed */
 }
 
 #actions {
@@ -119,7 +139,7 @@ header {
 #mainpage {
   display: none;
   padding: 3rem;
-  background: var(--container-bg-color);
+  background-color: white;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   width: 80%;

@@ -30,9 +30,11 @@
     <div id="mainpage" style="display: none;">
       <header>
         <img src="logo.png" alt="Parillis Logo" id="main-logo" />
-        <h1>Parillis Sensor Data</h1>
-        <h2 id="model-header">Current Model: PSILARTEMP</h2>
-      </header>
+        <div class="header-text-container">
+            <h1 id="header-text">Parillis Sensor Data</h1>
+            <h2 id="model-header">Current Model: PSILARTEMP</h2>
+        </div>
+    </header>
       <div id="actions">
         <button onclick="requestData()">Request Data from 7Sense</button>
         <button onclick="sendData()">Send Received Data to VIPS</button>
