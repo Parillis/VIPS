@@ -170,9 +170,9 @@ io.on("connection", (socket) => {
   function requestData() {
     console.log("requestData started as ", socket.id);
     const bearerToken = "asdfmjrtaADFG348RKVvnsarguja7df0";
-
+    socket.emit("Processing")
     fetch(
-      "http://portal.7sense.no:46000/v1/sensorunits/data?serialnumber=21-1065-AA-00001&timestart=2024-01-01",
+      "http://portal.7sense.no:46000/v1/sensorunits/data?serialnumber=21-1065-AA-00001&timestart=2024-04-01",
       {
         headers: {
           Authorization: `Bearer ${bearerToken}`,
@@ -188,12 +188,18 @@ io.on("connection", (socket) => {
         return response.json();
       })
       .then((data) => {
-        const result = data.result;
+        try {
+          const result = data.result;
         const filteredData = result.filter((item) => item.probenumber === 1);
 
         // Log the filtered data
-        // console.log("Filtered Data:", filteredData);
+        // console.log("Filtered Data:", filteredData);  
         formatData(filteredData);
+
+        } catch (error) {
+          
+        }
+        
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -201,15 +207,15 @@ io.on("connection", (socket) => {
       });
   }
 
-  function formatData(data) {
+  function formatData(data, addRandomDegrees = true ) {
     // Write the contents of data to formatdata.json
-
+  
     const loginInfo = {
       username: "testuser",
       password: "testpass",
     };
     const modelId = "PSILARTEMP";
-
+  
     // Extract timestamps and group by date
     const groupedData = data.reduce((acc, item) => {
       const date = new Date(item.timestamp).toISOString().split("T")[0];
@@ -217,7 +223,7 @@ io.on("connection", (socket) => {
       acc[date].push(item);
       return acc;
     }, {});
-
+  
     // Create an array of dates and an array of corresponding temperature values
     const dates = Object.keys(groupedData).sort();
     const temperatureValues = dates.map((date) => {
@@ -230,15 +236,15 @@ io.on("connection", (socket) => {
       }
       return dataItem ? dataItem.value : null;
     });
-
+  
     // Fill in missing dates and interpolate temperature values
     const allDates = [];
     const allTemperatureValues = [];
-
+  
     const startDate = new Date(dates[0]);
     const endDate = new Date(dates[dates.length - 1]);
     let currentDate = startDate;
-
+  
     while (currentDate <= endDate) {
       const dateString = currentDate.toISOString().split("T")[0];
       allDates.push(dateString);
@@ -250,17 +256,17 @@ io.on("connection", (socket) => {
       }
       currentDate.setDate(currentDate.getDate() + 1);
     }
-
+  
     // Convert dates to numeric representation
     const dateNums = allDates.map((date) => new Date(date).getTime());
     const nonNullDateNums = dateNums.filter(
       (_, i) => allTemperatureValues[i] !== null
     );
     const nonNullTemps = allTemperatureValues.filter((value) => value !== null);
-
+  
     // Perform spline interpolation using numeric.js
     const spline = numeric.spline(nonNullDateNums, nonNullTemps);
-
+  
     const interpolatedValues = dateNums.map((dateNum, index) => {
       if (allTemperatureValues[index] !== null) {
         return allTemperatureValues[index];
@@ -268,7 +274,16 @@ io.on("connection", (socket) => {
         return spline.at(dateNum);
       }
     });
-
+  
+    // Add random degrees for testing if the flag is true
+    const testTemperatureValues = interpolatedValues.map(value => {
+      if (addRandomDegrees) {
+        const randomIncrease = Math.random() + 20; // Adds between 0 and 2 degrees
+        return value + randomIncrease;
+      }
+      return value;
+    });
+  
     // Create observations
     const observations = allDates.map((date, index) => {
       const timeMeasured = `${date}T16:00:00Z`;
@@ -276,10 +291,10 @@ io.on("connection", (socket) => {
         elementMeasurementTypeId: "TM",
         logIntervalId: 2,
         timeMeasured: timeMeasured,
-        value: interpolatedValues[index],
+        value: testTemperatureValues[index],
       };
     });
-
+  
     const formattedData = {
       loginInfo: loginInfo,
       modelId: modelId,
@@ -288,6 +303,7 @@ io.on("connection", (socket) => {
         observations: observations,
       },
     };
+    socket.emit("data-formatted")
     connection[socket.id].models.PSILARTEMP.data = formattedData;
     // sendData(formattedData);
     fs.writeFile(
@@ -303,6 +319,7 @@ io.on("connection", (socket) => {
       }
     );
   }
+  
 
   // Helper function to find the closest hour data
   function findClosestHourData(dateData, targetHour) {
@@ -326,25 +343,6 @@ io.on("connection", (socket) => {
   }
 
   // Helper function to find the closest hour data
-  function findClosestHourData(dateData, targetHour) {
-    const hours = dateData.map((item) =>
-      new Date(item.timestamp).getUTCHours()
-    );
-    let closestHour = null;
-    let closestDifference = Infinity;
-
-    hours.forEach((hour) => {
-      const difference = Math.abs(hour - targetHour);
-      if (difference < closestDifference) {
-        closestDifference = difference;
-        closestHour = hour;
-      }
-    });
-
-    return dateData.find(
-      (item) => new Date(item.timestamp).getUTCHours() === closestHour
-    );
-  }
 
   function sendData(data) {
     try {
@@ -363,6 +361,18 @@ io.on("connection", (socket) => {
       })
       .then((data) => {
         try{
+          fs.writeFile(
+            "receiveddata.json",
+            JSON.stringify(data, null, 2),
+            "utf-8",
+            (err) => {
+              if (err) {
+                console.error("Error writing to receiveddata.json:", err);
+              } else {
+                console.log("Data has been written to receiveddata.json");
+              }
+            }
+          );
           data.forEach((data) => {
             // Extracting date from validTimeStart
             const date = new Date(data.validTimeStart);
@@ -378,7 +388,6 @@ io.on("connection", (socket) => {
             });
           });
         }catch (error){
-          socket.emit("SendDataError404")
           console.log(error);
         }
       });

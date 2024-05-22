@@ -1,3 +1,135 @@
-canvas {
-    border: 1px solid black;
+:root {
+  /* Font */
+  --font-family: 'Raleway', sans-serif;
+
+  /* Light theme colors */
+  --background-color: #f4f4f9;
+  --text-color: #224779;
+  --button-bg-color: #224779;
+  --button-bg-hover-color: #7497C4;
+  --container-bg-color: white;
+  --input-border-color: #ddd;
+
+  /* Dark theme colors */
+  --background-color-dark: #121212;
+  --text-color-dark: #e0e0e0;
+  --button-bg-color-dark: #00574D;
+  --button-bg-hover-color-dark: #7497C4;
+  --container-bg-color-dark: #1e1e1e;
+  --input-border-color-dark: #444;
 }
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--background-color);
+  background-image: url('background.svg');
+  background-size: cover;
+  color: var(--text-color);
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+#login-container {
+  background: var(--container-bg-color);
+  padding: 3rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  text-align: center;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+#logo {
+  width: 150px;
+  margin-bottom: 1.5rem;
+}
+
+#main-logo {
+  width: 100px;
+  margin-bottom: 1rem;
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin-bottom: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--input-border-color);
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+button {
+  background-color: var(--button-bg-color);
+  color: white;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  font-weight: 600;
+  transition: background-color 0.3s;
+  margin: 0.5rem;
+}
+
+button:hover {
+  background-color: var(--button-bg-hover-color);
+}
+
+header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+#actions {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+#status {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+#mainpage {
+  display: none;
+  padding: 3rem;
+  background: var(--container-bg-color);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  width: 80%;
+  margin: 2rem auto;
+}
+
+.chart-container {
+  position: relative;
+  height: 50vh; /* Adjust the height as needed */
+  width: 90vw;  /* Adjust the width as needed */
+}
+
+

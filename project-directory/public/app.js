@@ -1,5 +1,5 @@
 // -------------------------Server.js---------------------------------------
-const socket = io("http://51.174.112.205:26001", { transports: ["websocket"] });
+const socket = io("localhost:26001", { transports: ["websocket"] });
 // Handling connection errors
 socket.on("connect_error", (error) => {
   console.error("Error connecting to the server:", error.message);
@@ -36,6 +36,8 @@ socket.on("login_response", function (data) {
     console.log("Successfully logged in");
     document.getElementById("login-container").style.display = "none";
     document.getElementById("mainpage").style.display = "block";
+
+    fetchDataAndRenderChart();
   } else {
     alert("Invalid username or password. Please try again.");
   }
@@ -50,13 +52,14 @@ function sendData() {
 }
 function requestData() {
   socket.emit("requestData", currentkey);
-  console.log("Request data sent")
+  console.log("Request data sent");
 }
 
+const sensorDataDiv = document.getElementById("sensorData");
 
-const sensorDataDiv = document.getElementById("sensorData");document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
   const ctx = document.getElementById('myChart').getContext('2d');
-  
+
   // Initialize arrays to store date and warning status data
   const dates = [];
   const warningStatuses = [];
@@ -67,18 +70,52 @@ const sensorDataDiv = document.getElementById("sensorData");document.addEventLis
   chart = new Chart(ctx, {
     type: 'line',
     data: {
-      labels: dates, // Use dates as labels for y-axis
+      labels: dates, // Use dates as labels for x-axis
       datasets: [{
         label: 'Warning Status',
-        data: warningStatuses, // Use warning statuses as data for x-axis
-        borderWidth: 1
+        data: warningStatuses, // Use warning statuses as data for y-axis
+        borderWidth: 2,
+        fill: false,
+        // pointRadius: 0,
+        pointcolor: 'red',
+        segment: {
+          borderColor: ctx => {
+            const index = ctx.p0DataIndex;
+            switch (warningStatuses[index]) {
+              case 2:
+                return 'blue';
+              case 3:
+                return 'yellow';
+              case 4:
+                return 'red';
+              default:
+                return 'gray';
+            }
+          }
+        }
       }]
     },
     options: {
+      responsive: true,
       scales: {
         y: {
           beginAtZero: true,
-          suggestedMax: 5, // Start the y-axis at -1
+          suggestedMax: 5, // Start the y-axis at 0
+          title: {
+            display: true,
+            text: 'Warning Status'
+          }
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Date'
+          }
+        }
+      },
+      elements: {
+        line: {
+          tension: 0
         }
       }
     }
@@ -87,7 +124,7 @@ const sensorDataDiv = document.getElementById("sensorData");document.addEventLis
   // Listen for 'sensor-data' event from the server
   socket.on("sensor-data", (data) => {
     console.log("Received sensor data:", data);
-    document.getElementById("SendDataStatus").innerText = "Sending data successful, data received"
+    document.getElementById("SendDataStatus").innerText = "Sending data successful, data received";
     
     // Push date and warning status to their respective arrays
     dates.push(data.date);
@@ -101,18 +138,26 @@ const sensorDataDiv = document.getElementById("sensorData");document.addEventLis
   function updateChart() {
     // Update the chart's datasets with the new data
     chart.data.labels = dates;
-    chart.data.datasets.forEach((dataset) => {
-      dataset.data = warningStatuses;
-    });
+    chart.data.datasets[0].data = warningStatuses;
+
     document.getElementById("myChart").style.display = "block";
     // Update the chart
     chart.update();
   }
 });
 
-socket.on ("SendDataError404", (data) =>{
-  document.getElementById("SendDataStatus").innerText = "Sending Data error 404: No Saved Data"
-})
-socket.on ("RequestDataError", (data) =>{
-  document.getElementById("RequestDataStatus").innerText = ('Reqesting Data failed:' + JSON.stringify(data))
-})
+socket.on("SendDataError404", (data) => {
+  document.getElementById("SendDataStatus").innerText = "Sending Data error 404: No Saved Data";
+});
+socket.on("RequestDataError", (data) => {
+  document.getElementById("RequestDataStatus").innerText = ('Reqesting Data failed:' + JSON.stringify(data));
+});
+socket.on("Processing", (data) => {
+  console.log("R");
+  document.getElementById("RequestDataStatus").innerText = ('Processing Data');
+});
+
+socket.on("data-formatted", (data) => {
+  console.log("R22");
+  document.getElementById("RequestDataStatus").innerText = ('Data processing complete');
+});

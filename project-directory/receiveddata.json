@@ -1,0 +1,130 @@
+[
+  {
+    "validTimeStart": "2024-05-06T22:00:00.000+00:00",
+    "validTimeEnd": "2024-05-06T22:00:00.000+00:00",
+    "validGeometry": null,
+    "warningStatus": 2,
+    "allValues": "{\"WEATHER.TMDD5C\":\"30.77\",\"PSILARTEMP.THRESHOLD_1\":\"260\",\"PSILARTEMP.THRESHOLD_2\":\"360\",\"WEATHER.TMD5C\":\"30.77\",\"WEATHER.TMD\":\"35.77\",\"PSILARTEMP.THRESHOLD_3\":\"560\"}",
+    "keys": "[\"WEATHER.TMDD5C\",\"PSILARTEMP.THRESHOLD_1\",\"PSILARTEMP.THRESHOLD_2\",\"WEATHER.TMD5C\",\"WEATHER.TMD\",\"PSILARTEMP.THRESHOLD_3\"]"
+  },
+  {
+    "validTimeStart": "2024-05-07T22:00:00.000+00:00",
+    "validTimeEnd": "2024-05-07T22:00:00.000+00:00",
+    "validGeometry": null,
+    "warningStatus": 2,
+    "allValues": "{\"WEATHER.TMDD5C\":\"61.79\",\"PSILARTEMP.THRESHOLD_1\":\"260\",\"PSILARTEMP.THRESHOLD_2\":\"360\",\"WEATHER.TMD5C\":\"31.02\",\"WEATHER.TMD\":\"36.02\",\"PSILARTEMP.THRESHOLD_3\":\"560\"}",
+    "keys": "[\"WEATHER.TMDD5C\",\"PSILARTEMP.THRESHOLD_1\",\"PSILARTEMP.THRESHOLD_2\",\"WEATHER.TMD5C\",\"WEATHER.TMD\",\"PSILARTEMP.THRESHOLD_3\"]"
+  },
+  {
+    "validTimeStart": "2024-05-08T22:00:00.000+00:00",
+    "validTimeEnd": "2024-05-08T22:00:00.000+00:00",
+    "validGeometry": null,
+    "warningStatus": 2,
+    "allValues": "{\"WEATHER.TMDD5C\":\"92.87\",\"PSILARTEMP.THRESHOLD_1\":\"260\",\"PSILARTEMP.THRESHOLD_2\":\"360\",\"WEATHER.TMD5C\":\"31.09\",\"WEATHER.TMD\":\"36.09\",\"PSILARTEMP.THRESHOLD_3\":\"560\"}",
+    "keys": "[\"WEATHER.TMDD5C\",\"PSILARTEMP.THRESHOLD_1\",\"PSILARTEMP.THRESHOLD_2\",\"WEATHER.TMD5C\",\"WEATHER.TMD\",\"PSILARTEMP.THRESHOLD_3\"]"
+  },
+  {
+    "validTimeStart": "2024-05-09T22:00:00.000+00:00",
+    "validTimeEnd": "2024-05-09T22:00:00.000+00:00",
+    "validGeometry": null,
+    "warningStatus": 2,
+    "allValues": "{\"WEATHER.TMDD5C\":\"123.78\",\"PSILARTEMP.THRESHOLD_1\":\"260\",\"PSILARTEMP.THRESHOLD_2\":\"360\",\"WEATHER.TMD5C\":\"30.9\",\"WEATHER.TMD\":\"35.9\",\"PSILARTEMP.THRESHOLD_3\":\"560\"}",
+    "keys": "[\"WEATHER.TMDD5C\",\"PSILARTEMP.THRESHOLD_1\",\"PSILARTEMP.THRESHOLD_2\",\"WEATHER.TMD5C\",\"WEATHER.TMD\",\"PSILARTEMP.THRESHOLD_3\"]"
+  },
+  {
+    "validTimeStart": "2024-05-10T22:00:00.000+00:00",
+    "validTimeEnd": "2024-05-10T22:00:00.000+00:00",
+    "validGeometry": null,
+    "warningStatus": 2,
+    "allValues": "{\"WEATHER.TMDD5C\":\"156.8\",\"PSILARTEMP.THRESHOLD_1\":\"260\",\"PSILARTEMP.THRESHOLD_2\":\"360\",\"WEATHER.TMD5C\":\"33.02\",\"WEATHER.TMD\":\"38.02\",\"PSILARTEMP.THRESHOLD_3\":\"560\"}",
+    "keys": "[\"WEATHER.TMDD5C\",\"PSILARTEMP.THRESHOLD_1\",\"PSILARTEMP.THRESHOLD_2\",\"WEATHER.TMD5C\",\"WEATHER.TMD\",\"PSILARTEMP.THRESHOLD_3\"]"
+  },
+  {
+    "validTimeStart": "2024-05-11T22:00:00.000+00:00",
+    "validTimeEnd": "2024-05-11T22:00:00.000+00:00",
+    "validGeometry": null,
+    "warningStatus": 2,
+    "allValues": "{\"WEATHER.TMDD5C\":\"189.19\",\"PSILARTEMP.THRESHOLD_1\":\"260\",\"PSILARTEMP.THRESHOLD_2\":\"360\",\"WEATHER.TMD5C\":\"32.38\",\"WEATHER.TMD\":\"37.38\",\"PSILARTEMP.THRESHOLD_3\":\"560\"}",
+    "keys": "[\"WEATHER.TMDD5C\",\"PSILARTEMP.THRESHOLD_1\",\"PSILARTEMP.THRESHOLD_2\",\"WEATHER.TMD5C\",\"WEATHER.TMD\",\"PSILARTEMP.THRESHOLD_3\"]"
+  },
+  {
+    "validTimeStart": "2024-05-12T22:00:00.000+00:00",
+    "validTimeEnd": "2024-05-12T22:00:00.000+00:00",
+    "validGeometry": null,
+    "warningStatus": 2,
+    "allValues": "{\"WEATHER.TMDD5C\":\"224.57\",\"PSILARTEMP.THRESHOLD_1\":\"260\",\"PSILARTEMP.THRESHOLD_2\":\"360\",\"WEATHER.TMD5C\":\"35.39\",\"WEATHER.TMD\":\"40.39\",\"PSILARTEMP.THRESHOLD_3\":\"560\"}",
+    "keys": "[\"WEATHER.TMDD5C\",\"PSILARTEMP.THRESHOLD_1\",\"PSILARTEMP.THRESHOLD_2\",\"WEATHER.TMD5C\",\"WEATHER.TMD\",\"PSILARTEMP.THRESHOLD_3\"]"
+  },
+  {
+    "validTimeStart": "2024-05-13T22:00:00.000+00:00",
+    "validTimeEnd": "2024-05-13T22:00:00.000+00:00",
+    "validGeometry": null,
+    "warningStatus": 3,
+    "allValues": "{\"WEATHER.TMDD5C\":\"261.3\",\"PSILARTEMP.THRESHOLD_1\":\"260\",\"PSILARTEMP.THRESHOLD_2\":\"360\",\"WEATHER.TMD5C\":\"36.73\",\"WEATHER.TMD\":\"41.73\",\"PSILARTEMP.THRESHOLD_3\":\"560\"}",
+    "keys": "[\"WEATHER.TMDD5C\",\"PSILARTEMP.THRESHOLD_1\",\"PSILARTEMP.THRESHOLD_2\",\"WEATHER.TMD5C\",\"WEATHER.TMD\",\"PSILARTEMP.THRESHOLD_3\"]"
+  },
+  {
+    "validTimeStart": "2024-05-14T22:00:00.000+00:00",
+    "validTimeEnd": "2024-05-14T22:00:00.000+00:00",
+    "validGeometry": null,
+    "warningStatus": 3,
+    "allValues": "{\"WEATHER.TMDD5C\":\"299.73\",\"PSILARTEMP.THRESHOLD_1\":\"260\",\"PSILARTEMP.THRESHOLD_2\":\"360\",\"WEATHER.TMD5C\":\"38.42\",\"WEATHER.TMD\":\"43.42\",\"PSILARTEMP.THRESHOLD_3\":\"560\"}",
+    "keys": "[\"WEATHER.TMDD5C\",\"PSILARTEMP.THRESHOLD_1\",\"PSILARTEMP.THRESHOLD_2\",\"WEATHER.TMD5C\",\"WEATHER.TMD\",\"PSILARTEMP.THRESHOLD_3\"]"
+  },
+  {
+    "validTimeStart": "2024-05-15T22:00:00.000+00:00",
+    "validTimeEnd": "2024-05-15T22:00:00.000+00:00",
+    "validGeometry": null,
+    "warningStatus": 3,
+    "allValues": "{\"WEATHER.TMDD5C\":\"336.09\",\"PSILARTEMP.THRESHOLD_1\":\"260\",\"PSILARTEMP.THRESHOLD_2\":\"360\",\"WEATHER.TMD5C\":\"36.36\",\"WEATHER.TMD\":\"41.36\",\"PSILARTEMP.THRESHOLD_3\":\"560\"}",
+    "keys": "[\"WEATHER.TMDD5C\",\"PSILARTEMP.THRESHOLD_1\",\"PSILARTEMP.THRESHOLD_2\",\"WEATHER.TMD5C\",\"WEATHER.TMD\",\"PSILARTEMP.THRESHOLD_3\"]"
+  },
+  {
+    "validTimeStart": "2024-05-16T22:00:00.000+00:00",
+    "validTimeEnd": "2024-05-16T22:00:00.000+00:00",
+    "validGeometry": null,
+    "warningStatus": 4,
+    "allValues": "{\"WEATHER.TMDD5C\":\"373.94\",\"PSILARTEMP.THRESHOLD_1\":\"260\",\"PSILARTEMP.THRESHOLD_2\":\"360\",\"WEATHER.TMD5C\":\"37.85\",\"WEATHER.TMD\":\"42.85\",\"PSILARTEMP.THRESHOLD_3\":\"560\"}",
+    "keys": "[\"WEATHER.TMDD5C\",\"PSILARTEMP.THRESHOLD_1\",\"PSILARTEMP.THRESHOLD_2\",\"WEATHER.TMD5C\",\"WEATHER.TMD\",\"PSILARTEMP.THRESHOLD_3\"]"
+  },
+  {
+    "validTimeStart": "2024-05-17T22:00:00.000+00:00",
+    "validTimeEnd": "2024-05-17T22:00:00.000+00:00",
+    "validGeometry": null,
+    "warningStatus": 4,
+    "allValues": "{\"WEATHER.TMDD5C\":\"410.75\",\"PSILARTEMP.THRESHOLD_1\":\"260\",\"PSILARTEMP.THRESHOLD_2\":\"360\",\"WEATHER.TMD5C\":\"36.81\",\"WEATHER.TMD\":\"41.81\",\"PSILARTEMP.THRESHOLD_3\":\"560\"}",
+    "keys": "[\"WEATHER.TMDD5C\",\"PSILARTEMP.THRESHOLD_1\",\"PSILARTEMP.THRESHOLD_2\",\"WEATHER.TMD5C\",\"WEATHER.TMD\",\"PSILARTEMP.THRESHOLD_3\"]"
+  },
+  {
+    "validTimeStart": "2024-05-18T22:00:00.000+00:00",
+    "validTimeEnd": "2024-05-18T22:00:00.000+00:00",
+    "validGeometry": null,
+    "warningStatus": 4,
+    "allValues": "{\"WEATHER.TMDD5C\":\"448.4\",\"PSILARTEMP.THRESHOLD_1\":\"260\",\"PSILARTEMP.THRESHOLD_2\":\"360\",\"WEATHER.TMD5C\":\"37.65\",\"WEATHER.TMD\":\"42.65\",\"PSILARTEMP.THRESHOLD_3\":\"560\"}",
+    "keys": "[\"WEATHER.TMDD5C\",\"PSILARTEMP.THRESHOLD_1\",\"PSILARTEMP.THRESHOLD_2\",\"WEATHER.TMD5C\",\"WEATHER.TMD\",\"PSILARTEMP.THRESHOLD_3\"]"
+  },
+  {
+    "validTimeStart": "2024-05-19T22:00:00.000+00:00",
+    "validTimeEnd": "2024-05-19T22:00:00.000+00:00",
+    "validGeometry": null,
+    "warningStatus": 4,
+    "allValues": "{\"WEATHER.TMDD5C\":\"484.87\",\"PSILARTEMP.THRESHOLD_1\":\"260\",\"PSILARTEMP.THRESHOLD_2\":\"360\",\"WEATHER.TMD5C\":\"36.47\",\"WEATHER.TMD\":\"41.47\",\"PSILARTEMP.THRESHOLD_3\":\"560\"}",
+    "keys": "[\"WEATHER.TMDD5C\",\"PSILARTEMP.THRESHOLD_1\",\"PSILARTEMP.THRESHOLD_2\",\"WEATHER.TMD5C\",\"WEATHER.TMD\",\"PSILARTEMP.THRESHOLD_3\"]"
+  },
+  {
+    "validTimeStart": "2024-05-20T22:00:00.000+00:00",
+    "validTimeEnd": "2024-05-20T22:00:00.000+00:00",
+    "validGeometry": null,
+    "warningStatus": 4,
+    "allValues": "{\"WEATHER.TMDD5C\":\"522.57\",\"PSILARTEMP.THRESHOLD_1\":\"260\",\"PSILARTEMP.THRESHOLD_2\":\"360\",\"WEATHER.TMD5C\":\"37.7\",\"WEATHER.TMD\":\"42.7\",\"PSILARTEMP.THRESHOLD_3\":\"560\"}",
+    "keys": "[\"WEATHER.TMDD5C\",\"PSILARTEMP.THRESHOLD_1\",\"PSILARTEMP.THRESHOLD_2\",\"WEATHER.TMD5C\",\"WEATHER.TMD\",\"PSILARTEMP.THRESHOLD_3\"]"
+  },
+  {
+    "validTimeStart": "2024-05-21T22:00:00.000+00:00",
+    "validTimeEnd": "2024-05-21T22:00:00.000+00:00",
+    "validGeometry": null,
+    "warningStatus": 4,
+    "allValues": "{\"WEATHER.TMDD5C\":\"559.39\",\"PSILARTEMP.THRESHOLD_1\":\"260\",\"PSILARTEMP.THRESHOLD_2\":\"360\",\"WEATHER.TMD5C\":\"36.81\",\"WEATHER.TMD\":\"41.81\",\"PSILARTEMP.THRESHOLD_3\":\"560\"}",
+    "keys": "[\"WEATHER.TMDD5C\",\"PSILARTEMP.THRESHOLD_1\",\"PSILARTEMP.THRESHOLD_2\",\"WEATHER.TMD5C\",\"WEATHER.TMD\",\"PSILARTEMP.THRESHOLD_3\"]"
+  }
+]
