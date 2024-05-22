@@ -36,6 +36,7 @@ socket.on("login_response", function (data) {
     console.log("Successfully logged in");
     document.getElementById("login-container").style.display = "none";
     document.getElementById("mainpage").style.display = "block";
+    
   } else {
     alert("Invalid username or password. Please try again.");
   }
@@ -43,6 +44,7 @@ socket.on("login_response", function (data) {
 socket.on("key", (data) => {
   console.log("Received key:", data);
   currentkey = data;
+  requestData()
 });
 
 function sendData() {
@@ -133,12 +135,9 @@ document.addEventListener("DOMContentLoaded", function () {
       updateChart();
     } else if (timesSent >= 17) {
       timesSent = 0
+      console.log("TimesSent",timesSent)
       dates.splice(0, dates.length);
       warningStatuses.splice(0, warningStatuses.length);
-      updateChart();
-      console.log("TimesSen23123121312312313t: ", timesSent);
-      dates.push(data.date);
-      warningStatuses.push(data.warningStatus);
       updateChart();
     }
 
@@ -157,20 +156,23 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 timesSent = 0;
 socket.on("SendDataError404", (data) => {
-  document.getElementById("SendDataStatus").innerText =
-    "Sending Data error 404: No Saved Data";
+  // document.getElementById("SendDataStatus").innerText =
+  //   "Sending Data error 404: No Saved Data";
+  console.log("Sending Data error 404: No Saved Data");
 });
 socket.on("RequestDataError", (data) => {
-  document.getElementById("RequestDataStatus").innerText =
-    "Reqesting Data failed:" + JSON.stringify(data);
+  // document.getElementById("RequestDataStatus").innerText =
+  //   "Reqesting Data failed:" + JSON.stringify(data);
+  console.log("Reqesting Data failed:" + JSON.stringify(data));
 });
 socket.on("Processing", (data) => {
-  console.log("R");
-  document.getElementById("RequestDataStatus").innerText = "Processing Data";
+  // document.getElementById("RequestDataStatus").innerText = "Processing Data";
+  console.log("Processing Data")
 });
 
 socket.on("data-formatted", (data) => {
-  console.log("R22");
-  document.getElementById("RequestDataStatus").innerText =
-    "Data processing complete";
+  console.log("Data processing complete")
+  // document.getElementById("RequestDataStatus").innerText =
+  //   "Data processing complete";
+  sendData()
 });
