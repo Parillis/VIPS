@@ -11,97 +11,235 @@
         "elementMeasurementTypeId": "TM",
         "logIntervalId": 2,
         "timeMeasured": "2024-05-07T16:00:00Z",
-        "value": 34.91839962806185
+        "value": 14.8
       },
       {
         "elementMeasurementTypeId": "TM",
         "logIntervalId": 2,
         "timeMeasured": "2024-05-08T16:00:00Z",
-        "value": 36.60066310168558
+        "value": 15.7
       },
       {
         "elementMeasurementTypeId": "TM",
         "logIntervalId": 2,
         "timeMeasured": "2024-05-09T16:00:00Z",
-        "value": 35.47556130857068
+        "value": 15.1
       },
       {
         "elementMeasurementTypeId": "TM",
         "logIntervalId": 2,
         "timeMeasured": "2024-05-10T16:00:00Z",
-        "value": 35.250046866051264
+        "value": 15.2
       },
       {
         "elementMeasurementTypeId": "TM",
         "logIntervalId": 2,
         "timeMeasured": "2024-05-11T16:00:00Z",
-        "value": 38.71772419705066
+        "value": 17.9
       },
       {
         "elementMeasurementTypeId": "TM",
         "logIntervalId": 2,
         "timeMeasured": "2024-05-12T16:00:00Z",
-        "value": 37.26484136590847
+        "value": 17.2
       },
       {
         "elementMeasurementTypeId": "TM",
         "logIntervalId": 2,
         "timeMeasured": "2024-05-13T16:00:00Z",
-        "value": 40.8809860627429
+        "value": 20.3
       },
       {
         "elementMeasurementTypeId": "TM",
         "logIntervalId": 2,
         "timeMeasured": "2024-05-14T16:00:00Z",
-        "value": 41.70328867283038
+        "value": 21.4
       },
       {
         "elementMeasurementTypeId": "TM",
         "logIntervalId": 2,
         "timeMeasured": "2024-05-15T16:00:00Z",
-        "value": 43.027678652685246
+        "value": 22.5
       },
       {
         "elementMeasurementTypeId": "TM",
         "logIntervalId": 2,
         "timeMeasured": "2024-05-16T16:00:00Z",
-        "value": 42.09205334207977
+        "value": 21.3
       },
       {
         "elementMeasurementTypeId": "TM",
         "logIntervalId": 2,
         "timeMeasured": "2024-05-17T16:00:00Z",
-        "value": 42.279207131356316
+        "value": 22.1
       },
       {
         "elementMeasurementTypeId": "TM",
         "logIntervalId": 2,
         "timeMeasured": "2024-05-18T16:00:00Z",
-        "value": 42.1070473269296
+        "value": 21.8
       },
       {
         "elementMeasurementTypeId": "TM",
         "logIntervalId": 2,
         "timeMeasured": "2024-05-19T16:00:00Z",
-        "value": 43.30911156486546
+        "value": 22.4
       },
       {
         "elementMeasurementTypeId": "TM",
         "logIntervalId": 2,
         "timeMeasured": "2024-05-20T16:00:00Z",
-        "value": 41.86701386973053
+        "value": 21
       },
       {
         "elementMeasurementTypeId": "TM",
         "logIntervalId": 2,
         "timeMeasured": "2024-05-21T16:00:00Z",
-        "value": 42.33199962141101
+        "value": 22.2
       },
       {
         "elementMeasurementTypeId": "TM",
         "logIntervalId": 2,
         "timeMeasured": "2024-05-22T16:00:00Z",
-        "value": 46.29726514814073
+        "value": 23.4
+      },
+      {
+        "elementMeasurementTypeId": "TM",
+        "logIntervalId": 2,
+        "timeMeasured": "2024-05-23T16:00:00Z",
+        "value": 24.6
+      },
+      {
+        "elementMeasurementTypeId": "TM",
+        "logIntervalId": 2,
+        "timeMeasured": "2024-05-24T16:00:00Z",
+        "value": 24.75999990804121
+      },
+      {
+        "elementMeasurementTypeId": "TM",
+        "logIntervalId": 2,
+        "timeMeasured": "2024-05-25T16:00:00Z",
+        "value": 25.43999987738789
+      },
+      {
+        "elementMeasurementTypeId": "TM",
+        "logIntervalId": 2,
+        "timeMeasured": "2024-05-26T16:00:00Z",
+        "value": 26.119999846734572
+      },
+      {
+        "elementMeasurementTypeId": "TM",
+        "logIntervalId": 2,
+        "timeMeasured": "2024-05-27T16:00:00Z",
+        "value": 26.799999816081254
+      },
+      {
+        "elementMeasurementTypeId": "TM",
+        "logIntervalId": 2,
+        "timeMeasured": "2024-05-28T16:00:00Z",
+        "value": 27.479999785426116
+      },
+      {
+        "elementMeasurementTypeId": "TM",
+        "logIntervalId": 2,
+        "timeMeasured": "2024-05-29T16:00:00Z",
+        "value": 28.159999754772798
+      },
+      {
+        "elementMeasurementTypeId": "TM",
+        "logIntervalId": 2,
+        "timeMeasured": "2024-05-30T16:00:00Z",
+        "value": 28.83999972411948
+      },
+      {
+        "elementMeasurementTypeId": "TM",
+        "logIntervalId": 2,
+        "timeMeasured": "2024-05-31T16:00:00Z",
+        "value": 29.51999969346616
+      },
+      {
+        "elementMeasurementTypeId": "TM",
+        "logIntervalId": 2,
+        "timeMeasured": "2024-06-01T16:00:00Z",
+        "value": 30.199999662812843
+      },
+      {
+        "elementMeasurementTypeId": "TM",
+        "logIntervalId": 2,
+        "timeMeasured": "2024-06-02T16:00:00Z",
+        "value": 30.879999632159524
+      },
+      {
+        "elementMeasurementTypeId": "TM",
+        "logIntervalId": 2,
+        "timeMeasured": "2024-06-03T16:00:00Z",
+        "value": 31.559999601506206
+      },
+      {
+        "elementMeasurementTypeId": "TM",
+        "logIntervalId": 2,
+        "timeMeasured": "2024-06-04T16:00:00Z",
+        "value": 32.23999957085289
+      },
+      {
+        "elementMeasurementTypeId": "TM",
+        "logIntervalId": 2,
+        "timeMeasured": "2024-06-05T16:00:00Z",
+        "value": 32.91999954019957
+      },
+      {
+        "elementMeasurementTypeId": "TM",
+        "logIntervalId": 2,
+        "timeMeasured": "2024-06-06T16:00:00Z",
+        "value": 33.59999950954625
+      },
+      {
+        "elementMeasurementTypeId": "TM",
+        "logIntervalId": 2,
+        "timeMeasured": "2024-06-07T16:00:00Z",
+        "value": 34.27999947889293
+      },
+      {
+        "elementMeasurementTypeId": "TM",
+        "logIntervalId": 2,
+        "timeMeasured": "2024-06-08T16:00:00Z",
+        "value": 34.959999448239614
+      },
+      {
+        "elementMeasurementTypeId": "TM",
+        "logIntervalId": 2,
+        "timeMeasured": "2024-06-09T16:00:00Z",
+        "value": 35.639999417586296
+      },
+      {
+        "elementMeasurementTypeId": "TM",
+        "logIntervalId": 2,
+        "timeMeasured": "2024-06-10T16:00:00Z",
+        "value": 36.31999938693298
+      },
+      {
+        "elementMeasurementTypeId": "TM",
+        "logIntervalId": 2,
+        "timeMeasured": "2024-06-11T16:00:00Z",
+        "value": 36.99999935627966
+      },
+      {
+        "elementMeasurementTypeId": "TM",
+        "logIntervalId": 2,
+        "timeMeasured": "2024-06-12T16:00:00Z",
+        "value": 37.67999932562634
+      },
+      {
+        "elementMeasurementTypeId": "TM",
+        "logIntervalId": 2,
+        "timeMeasured": "2024-06-13T16:00:00Z",
+        "value": 38.35999929497302
+      },
+      {
+        "elementMeasurementTypeId": "TM",
+        "logIntervalId": 2,
+        "timeMeasured": "2024-06-14T16:00:00Z",
+        "value": 39.039999264319704
       }
     ]
   }

@@ -157,12 +157,10 @@ io.on("connection", (socket) => {
     if (connection[socket.id].key === receivedkey) {
       console.log("test-button sent");
       try {
-        sendData(connection[socket.id].models.PSILARTEMP.data)
+        sendData(connection[socket.id].models.PSILARTEMP.data);
       } catch (error) {
         console.log(error);
-
       }
-      
     } else {
       socket.emit("action-failed", {});
     }
@@ -170,7 +168,7 @@ io.on("connection", (socket) => {
   function requestData() {
     console.log("requestData started as ", socket.id);
     const bearerToken = "asdfmjrtaADFG348RKVvnsarguja7df0";
-    socket.emit("Processing")
+    socket.emit("Processing");
     fetch(
       "http://portal.7sense.no:46000/v1/sensorunits/data?serialnumber=21-1065-AA-00001&timestart=2024-04-01",
       {
@@ -190,26 +188,20 @@ io.on("connection", (socket) => {
       .then((data) => {
         try {
           const result = data.result;
-        const filteredData = result.filter((item) => item.probenumber === 1);
+          const filteredData = result.filter((item) => item.probenumber === 1);
 
-        // Log the filtered data
-        // console.log("Filtered Data:", filteredData);  
-        formatData(filteredData);
-
-        } catch (error) {
-          
-        }
-        
+          // Log the filtered data
+          // console.log("Filtered Data:", filteredData);
+          formatData(filteredData);
+        } catch (error) {}
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
-        socket.emit("RequestDataError",error)
+        socket.emit("RequestDataError", error);
       });
   }
 
-  function formatData(data, addRandomDegrees = true ) {
-    // Write the contents of data to formatdata.json
-  
+  function formatData(data, addRandomDegrees = false, daysToPredict = 22) {
     const loginInfo = {
       username: "testuser",
       password: "testpass",
@@ -276,13 +268,41 @@ io.on("connection", (socket) => {
     });
   
     // Add random degrees for testing if the flag is true
-    const testTemperatureValues = interpolatedValues.map(value => {
+    const testTemperatureValues = interpolatedValues.map((value) => {
       if (addRandomDegrees) {
         const randomIncrease = Math.random() + 20; // Adds between 0 and 2 degrees
         return value + randomIncrease;
       }
       return value;
     });
+  
+    // Predict future days based on a linear trend of the last 5 days
+    const lastFiveDates = dateNums.slice(-5);
+    const lastFiveTemps = testTemperatureValues.slice(-5);
+  
+    // Simple linear regression
+    const n = lastFiveDates.length;
+    const sumX = lastFiveDates.reduce((a, b) => a + b, 0);
+    const sumY = lastFiveTemps.reduce((a, b) => a + b, 0);
+    const sumXY = lastFiveDates.reduce(
+      (sum, x, i) => sum + x * lastFiveTemps[i],
+      0
+    );
+    const sumXX = lastFiveDates.reduce((sum, x) => sum + x * x, 0);
+  
+    const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
+    const intercept = (sumY - slope * sumX) / n;
+  
+    for (let i = 1; i <= daysToPredict; i++) {
+      const nextDate = new Date(endDate);
+      nextDate.setDate(nextDate.getDate() + i);
+      const nextDateNum = nextDate.getTime();
+      const predictedValue = slope * nextDateNum + intercept;
+  
+      const nextDateString = nextDate.toISOString().split("T")[0];
+      allDates.push(nextDateString);
+      testTemperatureValues.push(predictedValue);
+    }
   
     // Create observations
     const observations = allDates.map((date, index) => {
@@ -303,8 +323,9 @@ io.on("connection", (socket) => {
         observations: observations,
       },
     };
-    socket.emit("data-formatted")
+    socket.emit("data-formatted");
     connection[socket.id].models.PSILARTEMP.data = formattedData;
+    socket.emit("temperature", connection[socket.id].models.PSILARTEMP.data);
     // sendData(formattedData);
     fs.writeFile(
       "formatdata.json",
@@ -347,53 +368,52 @@ io.on("connection", (socket) => {
   function sendData(data) {
     try {
       // console.log(JSON.stringify(data));
-    console.log("Senddata data above");
-    console.log("sendData startet as", socket.id);
+      console.log("Senddata data above");
+      console.log("sendData startet as", socket.id);
 
-    fetch("https://coremanager.testvips.nibio.no/models/PSILARTEMP/run", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: { "Content-Type": "application/json" },
-    })
-      .then((response) => {
-        console.log("RESPONSE HERE", response);
-        return response.json();
+      fetch("https://coremanager.testvips.nibio.no/models/PSILARTEMP/run", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: { "Content-Type": "application/json" },
       })
-      .then((data) => {
-        try{
-          fs.writeFile(
-            "receiveddata.json",
-            JSON.stringify(data, null, 2),
-            "utf-8",
-            (err) => {
-              if (err) {
-                console.error("Error writing to receiveddata.json:", err);
-              } else {
-                console.log("Data has been written to receiveddata.json");
+        .then((response) => {
+          console.log("RESPONSE HERE", response);
+          return response.json();
+        })
+        .then((data) => {
+          try {
+            fs.writeFile(
+              "receiveddata.json",
+              JSON.stringify(data, null, 2),
+              "utf-8",
+              (err) => {
+                if (err) {
+                  console.error("Error writing to receiveddata.json:", err);
+                } else {
+                  console.log("Data has been written to receiveddata.json");
+                }
               }
-            }
-          );
-          data.forEach((data) => {
-            // Extracting date from validTimeStart
-            const date = new Date(data.validTimeStart);
-            const formattedDate = date.toISOString().split("T")[0]; // Extracting YYYY-MM-DD
-  
-            // Extracting warning status
-            const warningStatus = data.warningStatus;
-  
-            // Emitting an object containing the date and warning status
-            socket.emit("sensor-data", {
-              date: formattedDate,
-              warningStatus: warningStatus,
+            );
+            data.forEach((data) => {
+              // Extracting date from validTimeStart
+              const date = new Date(data.validTimeStart);
+              const formattedDate = date.toISOString().split("T")[0]; // Extracting YYYY-MM-DD
+
+              // Extracting warning status
+              const warningStatus = data.warningStatus;
+
+              // Emitting an object containing the date and warning status
+              socket.emit("sensor-data", {
+                date: formattedDate,
+                warningStatus: warningStatus,
+              });
             });
-          });
-        }catch (error){
-          console.log(error);
-        }
-      });
+          } catch (error) {
+            console.log(error);
+          }
+        });
     } catch (error) {
       console.log(error);
-
     }
   }
 
