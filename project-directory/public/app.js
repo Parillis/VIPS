@@ -1,5 +1,5 @@
 // -------------------------Server.js---------------------------------------
-const socket = io("51.174.112.205:26001/", { transports: ["websocket"] });
+const socket = io("localhost:26001", { transports: ["websocket"] });
 // Handling connection errors
 socket.on("connect_error", (error) => {
   console.error("Error connecting to the server:", error.message);
@@ -194,7 +194,7 @@ document.addEventListener("DOMContentLoaded", function () {
               const temp = temperatures[index];
               if (temp <= 17) return "blue";
               if (temp <= 24) return "yellow";
-              if (temp > 25) return "red";
+              if (temp > 24.4) return "red";
               return "gray";
             },
           },

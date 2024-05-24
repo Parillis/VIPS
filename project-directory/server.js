@@ -201,145 +201,131 @@ io.on("connection", (socket) => {
       });
   }
 
-  function formatData(data, addRandomDegrees = false, daysToPredict = 22) {
+  function formatData(data, addRandomDegrees = false, predictionDays = 0) {
     const loginInfo = {
-      username: "testuser",
-      password: "testpass",
+        username: "testuser",
+        password: "testpass",
     };
     const modelId = "PSILARTEMP";
-  
+
     // Extract timestamps and group by date
     const groupedData = data.reduce((acc, item) => {
-      const date = new Date(item.timestamp).toISOString().split("T")[0];
-      if (!acc[date]) acc[date] = [];
-      acc[date].push(item);
-      return acc;
+        const date = new Date(item.timestamp).toISOString().split("T")[0];
+        if (!acc[date]) acc[date] = [];
+        acc[date].push(item);
+        return acc;
     }, {});
-  
+
     // Create an array of dates and an array of corresponding temperature values
     const dates = Object.keys(groupedData).sort();
     const temperatureValues = dates.map((date) => {
-      const targetHour = 16;
-      let dataItem = groupedData[date].find(
-        (item) => new Date(item.timestamp).getUTCHours() === targetHour
-      );
-      if (!dataItem) {
-        dataItem = findClosestHourData(groupedData[date], targetHour);
-      }
-      return dataItem ? dataItem.value : null;
+        const targetHour = 16;
+        let dataItem = groupedData[date].find(
+            (item) => new Date(item.timestamp).getUTCHours() === targetHour
+        );
+        if (!dataItem) {
+            dataItem = findClosestHourData(groupedData[date], targetHour);
+        }
+        return dataItem ? dataItem.value : null;
     });
-  
+
     // Fill in missing dates and interpolate temperature values
     const allDates = [];
     const allTemperatureValues = [];
-  
+
     const startDate = new Date(dates[0]);
     const endDate = new Date(dates[dates.length - 1]);
     let currentDate = startDate;
-  
+
     while (currentDate <= endDate) {
-      const dateString = currentDate.toISOString().split("T")[0];
-      allDates.push(dateString);
-      const index = dates.indexOf(dateString);
-      if (index !== -1) {
-        allTemperatureValues.push(temperatureValues[index]);
-      } else {
-        allTemperatureValues.push(null);
-      }
-      currentDate.setDate(currentDate.getDate() + 1);
+        const dateString = currentDate.toISOString().split("T")[0];
+        allDates.push(dateString);
+        const index = dates.indexOf(dateString);
+        if (index !== -1) {
+            allTemperatureValues.push(temperatureValues[index]);
+        } else {
+            allTemperatureValues.push(null);
+        }
+        currentDate.setDate(currentDate.getDate() + 1);
     }
-  
+
     // Convert dates to numeric representation
     const dateNums = allDates.map((date) => new Date(date).getTime());
     const nonNullDateNums = dateNums.filter(
-      (_, i) => allTemperatureValues[i] !== null
+        (_, i) => allTemperatureValues[i] !== null
     );
     const nonNullTemps = allTemperatureValues.filter((value) => value !== null);
-  
+
     // Perform spline interpolation using numeric.js
     const spline = numeric.spline(nonNullDateNums, nonNullTemps);
-  
+
     const interpolatedValues = dateNums.map((dateNum, index) => {
-      if (allTemperatureValues[index] !== null) {
-        return allTemperatureValues[index];
-      } else {
-        return spline.at(dateNum);
-      }
+        if (allTemperatureValues[index] !== null) {
+            return allTemperatureValues[index];
+        } else {
+            return spline.at(dateNum);
+        }
     });
-  
+
     // Add random degrees for testing if the flag is true
     const testTemperatureValues = interpolatedValues.map((value) => {
-      if (addRandomDegrees) {
-        const randomIncrease = Math.random() + 20; // Adds between 0 and 2 degrees
-        return value + randomIncrease;
-      }
-      return value;
+        if (addRandomDegrees) {
+            const randomIncrease = Math.random() * 2; // Adds between 0 and 2 degrees
+            return value + randomIncrease;
+        }
+        return value;
     });
-  
-    // Predict future days based on a linear trend of the last 5 days
-    const lastFiveDates = dateNums.slice(-5);
+
+    // Predict next days based on a simple moving average of the last 5 days
     const lastFiveTemps = testTemperatureValues.slice(-5);
-  
-    // Simple linear regression
-    const n = lastFiveDates.length;
-    const sumX = lastFiveDates.reduce((a, b) => a + b, 0);
-    const sumY = lastFiveTemps.reduce((a, b) => a + b, 0);
-    const sumXY = lastFiveDates.reduce(
-      (sum, x, i) => sum + x * lastFiveTemps[i],
-      0
-    );
-    const sumXX = lastFiveDates.reduce((sum, x) => sum + x * x, 0);
-  
-    const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
-    const intercept = (sumY - slope * sumX) / n;
-  
-    for (let i = 1; i <= daysToPredict; i++) {
-      const nextDate = new Date(endDate);
-      nextDate.setDate(nextDate.getDate() + i);
-      const nextDateNum = nextDate.getTime();
-      const predictedValue = slope * nextDateNum + intercept;
-  
-      const nextDateString = nextDate.toISOString().split("T")[0];
-      allDates.push(nextDateString);
-      testTemperatureValues.push(predictedValue);
+    const averageTemp = lastFiveTemps.reduce((sum, value) => sum + value, 0) / lastFiveTemps.length;
+
+    for (let i = 1; i <= predictionDays; i++) {
+        const nextDate = new Date(endDate);
+        nextDate.setDate(nextDate.getDate() + i);
+
+        const nextDateString = nextDate.toISOString().split("T")[0];
+        allDates.push(nextDateString);
+        testTemperatureValues.push(averageTemp);
     }
-  
+
     // Create observations
     const observations = allDates.map((date, index) => {
-      const timeMeasured = `${date}T16:00:00Z`;
-      return {
-        elementMeasurementTypeId: "TM",
-        logIntervalId: 2,
-        timeMeasured: timeMeasured,
-        value: testTemperatureValues[index],
-      };
+        const timeMeasured = `${date}T16:00:00Z`;
+        return {
+            elementMeasurementTypeId: "TM",
+            logIntervalId: 2,
+            timeMeasured: timeMeasured,
+            value: testTemperatureValues[index],
+        };
     });
-  
+
     const formattedData = {
-      loginInfo: loginInfo,
-      modelId: modelId,
-      configParameters: {
-        timeZone: "Europe/Oslo",
-        observations: observations,
-      },
+        loginInfo: loginInfo,
+        modelId: modelId,
+        configParameters: {
+            timeZone: "Europe/Oslo",
+            observations: observations,
+        },
     };
     socket.emit("data-formatted");
     connection[socket.id].models.PSILARTEMP.data = formattedData;
     socket.emit("temperature", connection[socket.id].models.PSILARTEMP.data);
     // sendData(formattedData);
     fs.writeFile(
-      "formatdata.json",
-      JSON.stringify(formattedData, null, 2),
-      "utf-8",
-      (err) => {
-        if (err) {
-          console.error("Error writing to formatdata.json:", err);
-        } else {
-          console.log("Data has been written to formatdata.json");
+        "formatdata.json",
+        JSON.stringify(formattedData, null, 2),
+        "utf-8",
+        (err) => {
+            if (err) {
+                console.error("Error writing to formatdata.json:", err);
+            } else {
+                console.log("Data has been written to formatdata.json");
+            }
         }
-      }
     );
-  }
+}
+
   
 
   // Helper function to find the closest hour data
