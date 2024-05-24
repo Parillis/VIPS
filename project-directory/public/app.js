@@ -145,6 +145,16 @@ document.addEventListener("DOMContentLoaded", function () {
     modelchart.update();
   }
 });
+
+function showmodelchart() {
+  document.getElementById("modelchart").style.display = "block";
+  document.getElementById("temperatureChart").style.display = "none";
+}
+
+function showtemperaturechart(){
+  document.getElementById("temperatureChart").style.display = "block";
+  document.getElementById("modelchart").style.display = "none";
+}
 socket.on("SendDataError404", (data) => {
   // document.getElementById("SendDataStatus").innerText =
   //   "Sending Data error 404: No Saved Data";
@@ -250,8 +260,6 @@ document.addEventListener("DOMContentLoaded", function () {
     // Update the chart's datasets with the new data
     temperatureChart.data.labels = dates;
     temperatureChart.data.datasets[0].data = temperatures;
-
-    document.getElementById("temperatureChart").style.display = "block";
     // Update the chart
     temperatureChart.update();
   }
