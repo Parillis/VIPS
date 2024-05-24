@@ -47,9 +47,38 @@
         <div id="SendDataStatus"></div>
       </div>
       <div id="sensorData"></div>
+
       <div id="nav-Bar">
-        <button class="nav-BarButton"><h1 class="nav-BarText" onclick="showmodelchart()">PSILARTEMP</h1></button>
-        <button class="nav-BarButton"><h1 class="nav-BarText" onclick="showtemperaturechart()">Temperature</h1></button>
+        <button class="nav-BarButton">
+          <h1 class="nav-BarText" onclick="showmodelchart()">PSILARTEMP</h1>
+        </button>
+        <button class="nav-BarButton">
+          <h1 class="nav-BarText" onclick="showtemperaturechart()">
+            Temperature
+          </h1>
+        </button>
+      </div>
+      <div id="danger-Bar">
+        <div class="status">
+          <div class="box" style="background-color: lightgrey"></div>
+          <h2>Forecast not started</h2>
+        </div>
+        <div class="status">
+          <div class="box" style="background-color: #09b75e"></div>
+          <h2>Flight period not started</h2>
+        </div>
+        <div class="status">
+          <div class="box" style="background-color: #fccb09"></div>
+          <h2>Flight period starting</h2>
+        </div>
+        <div class="status">
+          <div class="box" style="background-color: #e91003"></div>
+          <h2>Peak flight activity</h2>
+        </div>
+        <div class="status">
+          <div class="box" style="background-color: grey"></div>
+          <h2>1st generation flight period ended</h2>
+        </div>
       </div>
       <div id="chartcontainer">
         <canvas
