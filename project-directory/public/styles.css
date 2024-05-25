@@ -184,6 +184,7 @@ header {
   font-weight: 200;
   margin: 0;
 }
+
 #danger-Bar {
   display: flex;
 }
@@ -191,11 +192,11 @@ header {
 .status {
   display: flex;
   align-items: center;
-  margin-right: 10px; 
+  margin-right: 10px; /* Add space between status items */
 }
 
 .box {
   height: 25px;
   width: 25px;
-  margin-right: 10px; 
+  margin-right: 10px; /* Add space between box and text */
 }
