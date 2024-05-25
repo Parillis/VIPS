@@ -1,22 +1,19 @@
 :root {
-  /* Font */
   --font-family: 'Raleway', sans-serif;
-
-  /* Light theme colors */
   --background-color: #f4f4f9;
   --text-color: #224779;
   --button-bg-color: #224779;
   --button-bg-hover-color: #7497C4;
   --container-bg-color: white;
   --input-border-color: #ddd;
-
-  /* Dark theme colors */
   --background-color-dark: #121212;
   --text-color-dark: #e0e0e0;
   --button-bg-color-dark: #00574D;
   --button-bg-hover-color-dark: #7497C4;
   --container-bg-color-dark: #1e1e1e;
   --input-border-color-dark: #444;
+
+  font-size: 16px;
 }
 
 body {
@@ -30,28 +27,27 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
   transition: background-color 0.3s, color 0.3s;
+  padding: 1rem;
+  font-size: 1rem;
 }
 
 #login-container {
   background: var(--container-bg-color);
-  padding: 3rem;
+  padding: 2rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
+  width: 100%;
+  max-width: 400px;
   text-align: center;
-  transition: background-color 0.3s, box-shadow 0.3s;
 }
 
 #logo {
-  width: 150px;
+  width: 100px;
   margin-bottom: 1.5rem;
 }
 
-#main-logo {
-  width: 100px;
-  margin-bottom: 1rem;
-}
 
 h1 {
   font-size: 2rem;
@@ -84,14 +80,15 @@ input {
   font-size: 1rem;
   transition: border-color 0.3s;
 }
+
 button {
-  background-color: whitesmoke;
-  color: black;
+  background-color: var(--button-bg-color);
+  color: white;
   padding: 1rem 2rem;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 600;
   transition: background-color 0.3s;
   margin: 0.5rem;
@@ -104,99 +101,129 @@ button:hover {
 
 header {
   display: flex;
-  align-items: center; /* Vertically center the items */
-  justify-content: center; /* Horizontally center the items */
+  align-items: center;
+  justify-content: center;
   padding: 1rem;
 }
 
 #main-logo {
-  margin-right: 1rem; /* Add some space between the logo and the text */
-  max-height: 100px; /* Adjust the logo size as needed */
+  margin-right: 1rem;
+  max-height: 6.25rem;
 }
 
 .header-text-container {
-  text-align: left; /* Align text to the left within the container */
+  text-align: left;
 }
 
 #header-text {
   margin: 0;
+  font-size: 2rem;
 }
 
 #model-header {
   margin: 0;
-  font-size: 1rem; /* Adjust font size as needed */
+  font-size: 1.25rem;
 }
 
-#actions {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-#status {
+#actions, #status {
   text-align: center;
   margin-bottom: 2rem;
 }
 
 #mainpage {
-  margin-top: 50%;
   display: none;
-  padding: 3rem;
-  background-color: white;
+  padding: 2rem;
+  background-color: var(--container-bg-color);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   width: 80%;
-  height: fit-content;
-}
-
-.chart-container {
-  position: relative;
-  height: 50vh; /* Adjust the height as needed */
-  width: 90vw;  /* Adjust the width as needed */
+  max-width: 1200px;
+  margin: auto;
 }
 
 #nav-Bar {
   display: flex;
-  border-bottom: 1px solid #ccc; 
+  justify-content: center;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 1rem;
 }
+
 .nav-BarButton {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 20px; 
-  border: none; 
-  background-color: whitesmoke;
-  margin-right: 5px; 
-  border-top-left-radius: 5px; 
+  padding: 0.5rem 1rem;
+  border: none;
+  background-color: var(--button-bg-color);
+  color: white;
+  margin-right: 0.5rem;
+  border-top-left-radius: 5px;
   border-top-right-radius: 5px;
-  border-bottom: 1px solid transparent; 
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
   cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
 }
 
 .nav-BarButton.active {
-  background: white;
-  border-bottom: 1px solid white; 
-  font-weight: bold; 
+  background: var(--button-bg-hover-color);
+  font-weight: bold;
 }
 
 .nav-BarText {
-  font-size: 1em;
-  font-weight: 200;
+  font-size: 1rem;
+  font-weight: 600;
   margin: 0;
 }
 
 #danger-Bar {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2rem;
 }
 
 .status {
   display: flex;
   align-items: center;
-  margin-right: 10px; /* Add space between status items */
+  margin-bottom: 1rem;
 }
 
-.box {
-  height: 25px;
-  width: 25px;
-  margin-right: 10px; /* Add space between box and text */
+.status .box {
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.5rem;
+}
+
+.danger-Text {
+  font-size: 1rem;
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  #danger-Bar {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+
+  .status {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .status .box {
+    width: 2rem;
+    height: 2rem;
+    margin-right: 1rem;
+  }
+
+  .danger-Text {
+    font-size: 1.25rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .danger-Text {
+    font-size: 1.5rem;
+  }
 }

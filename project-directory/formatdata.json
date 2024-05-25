@@ -113,7 +113,13 @@
         "elementMeasurementTypeId": "TM",
         "logIntervalId": 2,
         "timeMeasured": "2024-05-24T16:00:00Z",
-        "value": 17.1
+        "value": 19.6
+      },
+      {
+        "elementMeasurementTypeId": "TM",
+        "logIntervalId": 2,
+        "timeMeasured": "2024-05-25T16:00:00Z",
+        "value": 24.4
       }
     ]
   }

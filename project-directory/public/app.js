@@ -83,11 +83,11 @@ document.addEventListener("DOMContentLoaded", function () {
               const index = ctx.p0DataIndex;
               switch (warningStatuses[index]) {
                 case 2:
-                  return "blue";
+                  return "#09b75e";
                 case 3:
-                  return "yellow";
+                  return "#fccb09";
                 case 4:
-                  return "red";
+                  return "#e91003";
                 default:
                   return "gray";
               }
@@ -202,9 +202,9 @@ document.addEventListener("DOMContentLoaded", function () {
             borderColor: (ctx) => {
               const index = ctx.p0DataIndex;
               const temp = temperatures[index];
-              if (temp <= 17) return "blue";
-              if (temp <= 24) return "yellow";
-              if (temp > 24.4) return "red";
+              if (temp <= 17) return "#fccb09";
+              if (temp <= 24) return "orange";
+              if (temp > 24.4) return "#e91003";
               return "gray";
             },
           },
