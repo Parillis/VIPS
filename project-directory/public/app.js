@@ -1,5 +1,5 @@
 // -------------------------Server.js---------------------------------------
-const socket = io("localhost:26001", { transports: ["websocket"] });
+const socket = io("51.174.112.205:26001", { transports: ["websocket"] });
 // Handling connection errors
 socket.on("connect_error", (error) => {
   console.error("Error connecting to the server:", error.message);
