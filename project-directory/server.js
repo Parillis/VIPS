@@ -93,6 +93,8 @@ io.on("connection", (socket) => {
         data: {},
       },
     },
+    randomizedata : false,
+    predictionDays: 0,
   };
 
   // Logging the time of connection
@@ -165,6 +167,16 @@ io.on("connection", (socket) => {
       socket.emit("action-failed", {});
     }
   });
+  socket.on("predictdays", (receiveddata, receivedkey) => {
+    console.log('predictDays received from',socket.handshake.address.replace(/^.*:/, ""))
+    if (connection[socket.id].key === receivedkey) {
+      connection[socket.id].predictionDays = receiveddata,
+      requestData()
+    } else {
+      socket.emit("action-failed", {});
+    }
+    }
+    )
   function requestData() {
     console.log("requestData started as ", socket.id);
     const bearerToken = "asdfmjrtaADFG348RKVvnsarguja7df0";
@@ -193,6 +205,7 @@ io.on("connection", (socket) => {
           // Log the filtered data
           // console.log("Filtered Data:", filteredData);
           formatData(filteredData);
+          current
         } catch (error) {}
       })
       .catch((error) => {
@@ -201,7 +214,7 @@ io.on("connection", (socket) => {
       });
   }
 
-  function formatData(data, addRandomDegrees = false, predictionDays = 0) {
+  function formatData(data, addRandomDegrees = connection[socket.id].randomizedata, predictionDays = connection[socket.id].predictionDays) {
     const loginInfo = {
         username: "testuser",
         password: "testpass",
@@ -310,7 +323,7 @@ io.on("connection", (socket) => {
     };
     socket.emit("data-formatted");
     connection[socket.id].models.PSILARTEMP.data = formattedData;
-    socket.emit("temperature", connection[socket.id].models.PSILARTEMP.data);
+    // socket.emit("temperature", connection[socket.id].models.PSILARTEMP.data);
     // sendData(formattedData);
     fs.writeFile(
         "formatdata.json",
@@ -324,6 +337,7 @@ io.on("connection", (socket) => {
             }
         }
     );
+
 }
 
   
